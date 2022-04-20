@@ -1,107 +1,135 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
-import { AuthProvider, PrivateRoute } from './components/SignUp/useAuth';
-import Header from './components/Header/Header';
-import Banner from './components/Banner/Banner';
-import Foods from './components/Foods/Foods';
-import FoodDetails from './components/FoodDetails/FoodDetails';
-import Blog from './components/Blog/Blog';
-import NotFound from './components/NotFound/NotFound';
-import SignUp from './components/SignUp/SignUp';
-import Shipment from './components/Shipment/Shipment';
-import OrderComplete from './components/OrderComplete/OrderComplete';
-import SearchResult from './components/SearchResult/SearchResult';
-
+import React, { useState, useContext, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { AuthProvider, PrivateRoute } from "./context/useAuth";
+import Header from "./components/Header/Header";
+import Banner from "./components/Banner/Banner";
+import Foods from "./components/Foods/Foods";
+import FoodDetails from "./components/FoodDetails/FoodDetails";
+import NotFound from "./components/NotFound/NotFound";
+import SignUp from "./components/SignUp/SignUp";
+import Shipment from "./components/Shipment/Shipment";
+import OrderComplete from "./components/OrderComplete/OrderComplete";
+import SearchResult from "./components/SearchResult/SearchResult";
+import { RestaurantsContext } from "./context/RestaurantsContext";
+import RestaurantPage from "./pages/RestaurantPage";
+import { FILTER_ITEMS } from "./helpers/constants";
+import { isFiltersActive } from "./helpers/utils";
 
 function App() {
+  const { restaurants, getRestaurants } = useContext(RestaurantsContext);
+  const [activeFilterList, setActiveFilters] = useState(FILTER_ITEMS);
+  const { allRestaurants } = restaurants;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
-  const [cart, setCart] = useState([])
+  useEffect(() => {
+    getRestaurants();
+  }, [getRestaurants]);
 
-  const cartHandler = currentFood => {
+  useEffect(() => {
+    const searchRestaurants = () => {
+      if (!allRestaurants) {
+        return null;
+      }
 
-    const alreadyAdded = cart.find(item => item.id === currentFood.id)
+      let results = allRestaurants;
+
+      if (isFiltersActive(activeFilterList)) {
+        results = results.filter(
+          (restaurant) => activeFilterList[restaurant.priceRange],
+        );
+      }
+
+      if (searchTerm !== "") {
+        results = results.filter(
+          (restaurant) =>
+            restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            restaurant.description
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase()),
+        );
+      }
+
+      setSearchResults(results);
+
+      if (searchTerm === "" && !isFiltersActive(activeFilterList)) {
+        setSearchResults(null);
+      }
+    };
+
+    searchRestaurants();
+  }, [allRestaurants, searchTerm, activeFilterList]);
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const [cart, setCart] = useState([]);
+
+  const cartHandler = (currentFood) => {
+    const alreadyAdded = cart.find((item) => item.id === currentFood.id);
 
     if (alreadyAdded) {
-      const reamingCarts = cart.filter(item => cart.id !== currentFood)
+      const reamingCarts = cart.filter((item) => cart.id !== currentFood);
       setCart(reamingCarts);
     } else {
-      const newCart = [...cart, currentFood]
+      const newCart = [...cart, currentFood];
       setCart(newCart);
     }
-  }
+  };
 
   const [deliveryDetails, setDeliveryDetails] = useState({
     toDoor: "Delivery To Door",
     read: null,
     businessName: null,
-    address: null
+    address: null,
   });
 
-  const deliveryDetailsHandler = data => {
+  const deliveryDetailsHandler = (data) => {
     setDeliveryDetails(data);
-  }
+  };
 
   const checkOutItemHandler = (foodID, foodQuantity) => {
-    const newCart = cart.map(item => {
+    const newCart = cart.map((item) => {
       if (item.id === foodID) {
         item.quantity = foodQuantity;
       }
       return item;
-    })
+    });
 
-    const filteredCart = newCart.filter(item => item.quantity > 0)
-    setCart(filteredCart)
-  }
+    const filteredCart = newCart.filter((item) => item.quantity > 0);
+    setCart(filteredCart);
+  };
 
   const clearCart = () => {
     setCart([]);
-  }
+  };
 
   return (
     <AuthProvider>
       <Router>
         <Switch>
-
           <Route exact path="/">
-            <Header
-              cart={cart}
-            />
+            <Header cart={cart} />
             <Banner />
-            <Foods
-              cart={cart}
-            />
-            <Blog />
+            <Foods cart={cart} />
           </Route>
 
-          <Route path='/food/:id'>
-            <Header
-              cart={cart}
-            />
-            <FoodDetails
-              cart={cart}
-              cartHandler={cartHandler}
-            />
+          <Route path="/food/:id">
+            <Header cart={cart} />
+            <FoodDetails cart={cart} cartHandler={cartHandler} />
           </Route>
 
-          <Route path='/search=:searchQuery'>
-            <Header
-              cart={cart}
-            />
+          <Route exact path="/restaurants/:restaurantId">
+            <RestaurantPage />
+          </Route>
+
+          <Route path="/search=:searchQuery">
+            <Header cart={cart} />
             <Banner />
             <SearchResult />
-            <Blog />
           </Route>
 
-          <PrivateRoute path='/checkout'>
-            <Header
-              cart={cart}
-            />
+          <PrivateRoute path="/checkout">
+            <Header cart={cart} />
             <Shipment
               cart={cart}
               deliveryDetails={deliveryDetails}
@@ -112,22 +140,17 @@ function App() {
           </PrivateRoute>
 
           <PrivateRoute path="/order-complete">
-            <Header
-              cart={cart}
-            />
-            <OrderComplete
-              deliveryDetails={deliveryDetails}
-            />
+            <Header cart={cart} />
+            <OrderComplete deliveryDetails={deliveryDetails} />
           </PrivateRoute>
 
-          <Route path='/signup'>
+          <Route path="/signup">
             <SignUp />
           </Route>
 
           <Route path="*">
             <NotFound />
           </Route>
-
         </Switch>
       </Router>
     </AuthProvider>
