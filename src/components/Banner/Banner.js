@@ -6,7 +6,7 @@ const Banner = () => {
 
     const [searchQuery, setSearchQuery] = useState(null);
     const getQuery = event => setSearchQuery(event.target.value);
-
+ 
     return (
         <section className='banner d-flex align-items-center text-center'>
             <div className='container'>
