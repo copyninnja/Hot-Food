@@ -1,0 +1,64 @@
+.item {
+  width: calc((100% - var(--gap) * 4) / 3); // 3 items pre row
+  margin-right: calc(var(--gap) * 2);
+  margin-bottom: var(--gap);
+
+  &:nth-child(3n + 3) {
+    margin-right: 0;
+  }
+
+  @media only screen and (max-width: 767px) {
+    width: 100%;
+    margin-right: 0;
+  }
+}
+
+.itemImgWrapper {
+  position: relative;
+  display: block;
+  margin-top: calc(var(--gap) / 3);
+}
+
+.itemDiscount {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 4px;
+  background: var(--white);
+  color: var(--black);
+  border-radius: var(--border-radius);
+}
+
+.itemImg {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  background: var(--black);
+  border-radius: var(--border-radius);
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+
+  a {
+    font-weight: bold;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+      "Helvetica Neue", sans-serif;
+    color: var(--brand-color);
+  }
+}
+
+.itemInfo {
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--black);
+
+  p {
+    margin: calc(var(--gap) / 3) 0 0;
+  }
+}

@@ -1,32 +1,69 @@
-*{
-    box-sizing: border-box!important;
+* {
+  box-sizing: border-box !important;
 }
 
-.sign-up{
-    background-image: url(../../images/signup-bg.png);
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-position: bottom;
-    height: 100vh;
-    box-sizing: content-box;
+.sign-up {
+  background-image: url(../../images/signup-bg.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+  height: 100vh;
+  box-sizing: content-box;
 }
-.sign-up .logo img{
-    height: 80px;
+.sign-up .logo img {
+  height: 80px;
 }
-.sign-up  form{
-    max-width: 400px;
-    margin: 0 auto;
+.sign-up form {
+  max-width: 400px;
+  margin: 0 auto;
 }
-.sign-up .form-control{
-    background:#f5f5f5;
-    border:none;
-    padding: 25px 15px !important;
+.sign-up .form-control {
+  background: #f5f5f5;
+  border: none;
+  padding: 25px 15px !important;
 }
-.error{
-    color: red;
+.error {
+  color: red;
 }
 
-.sign-up .option label{
-    color: red;
-    cursor: pointer;
-} 
+.sign-up .option label {
+  color: red;
+  cursor: pointer;
+}
+ul {
+  list-style: none;
+}
+.radios {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.radios li label {
+  margin-right: 1rem;
+}
+/* 
+.radios li {
+  position: relative;
+  background: #f4f4f4;
+  width: 50px;
+  height: 50px;
+  padding: 10px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 19px;
+  border: 1px #eee solid;
+  transition: 0.3s;
+}
+.radios li:hover {
+  background: #f00303;
+  color: #fff;
+}
+
+[type="radio"] {
+  opacity: 0;
+}
+
+[type="radio"]:checked + label {
+  background: #f00303;
+  color: #fff;
+} */
