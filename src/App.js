@@ -13,54 +13,11 @@ import Shipment from "./components/Shipment/Shipment";
 import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
 import { RestaurantsContext } from "./context/RestaurantsContext";
-import RestaurantPage from "./pages/RestaurantPage";
+import RestaurantPage from "./pages/CustomerMenu";
 import { FILTER_ITEMS } from "./helpers/constants";
 import { isFiltersActive } from "./helpers/utils";
-
+import CustomerMenu from "./pages/CustomerMenu";
 function App() {
-  const { restaurants, getRestaurants } = useContext(RestaurantsContext);
-  const [activeFilterList, setActiveFilters] = useState(FILTER_ITEMS);
-  const { allRestaurants } = restaurants;
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-
-  useEffect(() => {
-    getRestaurants();
-  }, [getRestaurants]);
-
-  useEffect(() => {
-    const searchRestaurants = () => {
-      if (!allRestaurants) {
-        return null;
-      }
-
-      let results = allRestaurants;
-
-      if (isFiltersActive(activeFilterList)) {
-        results = results.filter(
-          (restaurant) => activeFilterList[restaurant.priceRange],
-        );
-      }
-
-      if (searchTerm !== "") {
-        results = results.filter(
-          (restaurant) =>
-            restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            restaurant.description
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase()),
-        );
-      }
-
-      setSearchResults(results);
-
-      if (searchTerm === "" && !isFiltersActive(activeFilterList)) {
-        setSearchResults(null);
-      }
-    };
-
-    searchRestaurants();
-  }, [allRestaurants, searchTerm, activeFilterList]);
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
 
@@ -107,6 +64,10 @@ function App() {
     <AuthProvider>
       <Router>
         <Switch>
+          <Route exact path="/test">
+            <CustomerMenu />
+          </Route>
+
           <Route exact path="/">
             <Header cart={cart} />
             <Banner />

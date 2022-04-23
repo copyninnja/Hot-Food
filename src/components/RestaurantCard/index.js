@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
-// import { DEFAULT_PLACEHOLDER_IMAGE } from "../helpers/constants";
+import { DEFAULT_PLACEHOLDER_IMAGE } from "../../helpers/constants";
 import Highlight from "../../helpers/Highlight";
-import cardStyles from "./index.scss";
 import PropTypes from "prop-types";
-
+import React, { Component } from "react";
+import "./index.css";
 const RestaurantCard = ({ item, highlight, discount }) => {
   return (
-    <div className={cardStyles.item}>
-      <div className={cardStyles.itemHeader}>
+    <div className="item">
+      <div className="itemHeader">
         <Link to={`restaurants/${item.id}`}>
           <b>
             <Highlight text={item.name} highlight={highlight} />
@@ -15,18 +15,15 @@ const RestaurantCard = ({ item, highlight, discount }) => {
         </Link>
         {/* {formatPriceRange(item.priceRange)} */}
       </div>
-      <Link to={`restaurants/${item.id}`} className={cardStyles.itemImgWrapper}>
-        {discount && (
-          <span className={cardStyles.itemDiscount}>-{discount}%</span>
-        )}
+      <Link to={`restaurants/${item.id}`} className="itemImgWrapper">
         <img
           src={item.imageSmallUrl || DEFAULT_PLACEHOLDER_IMAGE}
           alt={`${item.name}`}
           height={200}
-          className={cardStyles.itemImg}
+          className="itemImg"
         />
       </Link>
-      <Link to={`restaurants/${item.id}`} className={cardStyles.itemInfo}>
+      <Link to={`restaurants/${item.id}`} className="itemInfo">
         <p>
           <Highlight text={item.description} highlight={highlight} />
         </p>

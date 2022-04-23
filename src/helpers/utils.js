@@ -1,18 +1,20 @@
-export const formatPriceRange = priceRange => {
+import React, { Component } from "react";
+
+export const formatPriceRange = (priceRange) => {
   const number = parseInt(priceRange, 10);
   return "$".repeat(number + 1);
-}
+};
 
 export const prepareMenuData = (menu) => {
   let resultMenu = [];
   menu.map((item) => {
     const quantity = 0;
-    resultMenu.push({ ...item, quantity});
+    resultMenu.push({ ...item, quantity });
     return false;
   });
 
   return resultMenu;
-}
+};
 
 export const generateRandomIdInCollection = (collection, idKey) => {
   let randomId = 1;
@@ -25,5 +27,7 @@ export const generateRandomIdInCollection = (collection, idKey) => {
 };
 
 export const isFiltersActive = (activeFilterList) => {
-  return Object.keys(activeFilterList).filter((filter) => activeFilterList[filter] === true).length
-}
+  return Object.keys(activeFilterList).filter(
+    (filter) => activeFilterList[filter] === true,
+  ).length;
+};
