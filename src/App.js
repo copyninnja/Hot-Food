@@ -16,7 +16,6 @@ import { RestaurantsContext } from "./context/RestaurantsContext";
 import RestaurantPage from "./pages/CustomerMenu";
 import { FILTER_ITEMS } from "./helpers/constants";
 import { isFiltersActive } from "./helpers/utils";
-import CustomerMenu from "./pages/CustomerMenu";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
@@ -64,23 +63,24 @@ function App() {
     <AuthProvider>
       <Router>
         <Switch>
-          <Route exact path="/test">
-            <CustomerMenu />
-          </Route>
+          {/* <Route exact path="/restaurants">
+            <RestaurantPage />
+          </Route> */}
 
-          <Route exact path="/">
+          <Route exact path="/restaurants/:restaurantId">
             <Header cart={cart} />
             <Banner />
             <Foods cart={cart} />
           </Route>
 
-          <Route path="/food/:id">
+          <Route exact path="/">
             <Header cart={cart} />
-            <FoodDetails cart={cart} cartHandler={cartHandler} />
+            <RestaurantPage />
           </Route>
 
-          <Route exact path="/restaurants/:restaurantId">
-            <RestaurantPage />
+          <Route path="/restaurants/:restaurantId/food/:id">
+            <Header cart={cart} />
+            <FoodDetails cart={cart} cartHandler={cartHandler} />
           </Route>
 
           <Route path="/search=:searchQuery">

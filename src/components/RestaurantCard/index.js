@@ -5,17 +5,18 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./index.css";
 const RestaurantCard = ({ item, highlight, discount }) => {
+  console.log(item);
   return (
     <div className="item">
       <div className="itemHeader">
-        <Link to={`restaurants/${item.id}`}>
+        <Link to={`restaurants/${item.id}/`}>
           <b>
             <Highlight text={item.name} highlight={highlight} />
           </b>
         </Link>
         {/* {formatPriceRange(item.priceRange)} */}
       </div>
-      <Link to={`restaurants/${item.id}`} className="itemImgWrapper">
+      <Link to={`restaurants/${item.id}/`} className="itemImgWrapper">
         <img
           src={item.imageSmallUrl || DEFAULT_PLACEHOLDER_IMAGE}
           alt={`${item.name}`}
@@ -23,7 +24,7 @@ const RestaurantCard = ({ item, highlight, discount }) => {
           className="itemImg"
         />
       </Link>
-      <Link to={`restaurants/${item.id}`} className="itemInfo">
+      <Link to={`restaurants/${item.id}/`} className="itemInfo">
         <p>
           <Highlight text={item.description} highlight={highlight} />
         </p>
