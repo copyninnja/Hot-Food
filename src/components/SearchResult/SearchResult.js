@@ -3,7 +3,6 @@ import "./SearchResult.css";
 import { useParams, Link } from "react-router-dom";
 import AllFoods from "../../fakeData/index.js";
 import FoodItem from "../FoodItem/FoodItem";
-
 const SearchResult = () => {
   //TODO 改成餐厅
   const { searchQuery } = useParams();

@@ -1,12 +1,23 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import * as firebase from "firebase/app";
-import "firebase/analytics";
-import "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import firebaseConfig from "../firebaseconfig";
 import { Route, Redirect } from "react-router-dom";
-
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "@firebase/firestore";
+import { initializeApp } from "firebase/app";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
+import "firebase/analytics";
+import firebase from "firebase/compat/app";
 //***************** Fire base Initialization ************************
-firebase.initializeApp(firebaseConfig);
+const db = getFirestore(firebase.initializeApp(firebaseConfig));
 
 const AuthContext = createContext();
 
@@ -48,12 +59,14 @@ const getUser = (user) => {
 
 const Auth = () => {
   const [user, setUser] = useState(null);
+  const usersCollectionRef = collection(db, "users"); //表名
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         const currentUser = user;
         setUser(currentUser);
+        console.log(user);
       }
     });
   }, []);

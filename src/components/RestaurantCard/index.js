@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import "./index.css";
 const RestaurantCard = ({ item, highlight, discount }) => {
-  console.log(item);
   return (
     <div className="item">
       <div className="itemHeader">
