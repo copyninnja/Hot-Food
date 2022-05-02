@@ -10,11 +10,10 @@ import allFoods from "../../fakeData/index";
 import suggestionFood from "../../fakeData/suggestionFood";
 import RecommendFood from "../RecommendFood/RecommendFood";
 import "./FoodDetails.css";
-import { getUsers } from "../../api";
+
 const FoodDetails = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    getUsers();
   }, []);
   let history = useHistory();
 
@@ -60,10 +59,7 @@ const FoodDetails = (props) => {
     history.push("/");
     window.scrollTo(0, 9999);
   }
-  //   const newSuggestionFood = () => {
-  //     console.log("111111111111!!!!!!!!!!!!!");
-  //     getUsers();
-  //   };
+
   return (
     <div className="food-details container scrollable">
       <div className="text-center">

@@ -1,21 +1,13 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import firebaseConfig from "../firebaseconfig";
-import { Route, Redirect } from "react-router-dom";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "@firebase/firestore";
-import { initializeApp } from "firebase/app";
+import { Route, Redirect, useHistory } from "react-router-dom";
+import { getFirestore } from "@firebase/firestore";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import "firebase/analytics";
 import firebase from "firebase/compat/app";
+import { createUser, getUserType } from "../api";
+
 //***************** Fire base Initialization ************************
 const db = getFirestore(firebase.initializeApp(firebaseConfig));
 
@@ -31,14 +23,23 @@ export const AuthProvider = (props) => {
 export const useAuth = () => useContext(AuthContext);
 
 //***************** Redirect review item to signIn ************************
-export const PrivateRoute = ({ children, ...rest }) => {
+export const PrivateRoute = ({ restricted, children, ...rest }) => {
   const auth = useAuth();
   return (
     <Route
       {...rest}
       render={({ location }) =>
         auth.user ? (
-          children
+          auth.user.type === restricted ? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: "/",
+                state: { from: location },
+              }}
+            />
+          )
         ) : (
           <Redirect
             to={{
@@ -59,14 +60,19 @@ const getUser = (user) => {
 
 const Auth = () => {
   const [user, setUser] = useState(null);
-  const usersCollectionRef = collection(db, "users"); //表名
-
+  // const usersCollectionRef = collection(db, "users"); //表名
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        const currentUser = user;
-        setUser(currentUser);
-        console.log(user);
+        const fetchData = async () => {
+          const type = await getUserType(user.email);
+          const currentUser = user;
+          currentUser.type = type === undefined ? "Customer" : type;
+          setUser(currentUser);
+          console.log(currentUser.type);
+          window.history.back();
+        };
+        fetchData();
       }
     });
   }, []);
@@ -90,13 +96,12 @@ const Auth = () => {
       });
   };
 
-  const signIn = (email, password) => {
+  const signIn = (email, password, type) => {
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
         setUser(result.user);
-        window.history.back();
       })
       .catch((error) => {
         setUser(null);
@@ -104,7 +109,7 @@ const Auth = () => {
       });
   };
 
-  const signUp = (email, password, name) => {
+  const signUp = (email, password, name, type) => {
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -115,8 +120,10 @@ const Auth = () => {
             displayName: name,
           })
           .then(() => {
-            setUser(result.user);
-            window.history.back();
+            createUser(email, type);
+            let thisUser = result.user;
+            thisUser.type = type;
+            setUser(thisUser);
           });
       })
       .catch((error) => {

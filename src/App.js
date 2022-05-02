@@ -1,8 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { AuthProvider, PrivateRoute } from "./context/useAuth";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Redirect,
+  Switch,
+} from "react-router-dom";
+import { PrivateRoute, useAuth } from "./context/useAuth";
 import Header from "./components/Header/Header";
 import Banner from "./components/Banner/Banner";
 import Foods from "./components/Foods/Foods";
@@ -16,9 +22,11 @@ import { RestaurantsContext } from "./context/RestaurantsContext";
 import RestaurantPage from "./pages/CustomerMenu";
 import { FILTER_ITEMS } from "./helpers/constants";
 import { isFiltersActive } from "./helpers/utils";
+
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
+  const auth = useAuth();
   const cartHandler = (currentFood) => {
     const alreadyAdded = cart.find((item) => item.id === currentFood.id);
 
@@ -59,61 +67,62 @@ function App() {
   };
 
   return (
-    <AuthProvider>
-      <Router>
-        <Switch>
-          {/* <Route exact path="/restaurants">
-            <RestaurantPage />
-          </Route> */}
+    <Router>
+      <Switch>
+        <PrivateRoute path="/Restaurant" restricted="Restaurant">
+          <Header cart={cart} />
+        </PrivateRoute>
+        <PrivateRoute path="/Admin" restricted="Admin">
+          NOW developing{" "}
+        </PrivateRoute>
 
-          <Route exact path="/restaurants/:restaurantId">
-            <Header cart={cart} />
-            <Banner />
-            <Foods cart={cart} />
-          </Route>
+        <Route exact path="/">
+          <Header cart={cart} />
+          <RestaurantPage />
+        </Route>
 
-          <Route exact path="/">
-            <Header cart={cart} />
-            <RestaurantPage />
-          </Route>
+        <Route exact path="/restaurants/:restaurantId">
+          <Header cart={cart} />
+          <Banner />
+          <Foods cart={cart} />
+        </Route>
 
-          <Route path="/restaurants/:restaurantId/food/:id">
-            <Header cart={cart} />
-            <FoodDetails cart={cart} cartHandler={cartHandler} />
-          </Route>
+        <Route path="/restaurants/:restaurantId/food/:id">
+          <Header cart={cart} />
+          <FoodDetails cart={cart} cartHandler={cartHandler} />
+        </Route>
 
-          <Route path="/search=:searchQuery">
-            <Header cart={cart} />
-            <Banner />
-            <SearchResult />
-          </Route>
+        <Route path="/search=:searchQuery">
+          <Header cart={cart} />
+          <Banner />
+          <SearchResult />
+        </Route>
 
-          <PrivateRoute path="/checkout">
-            <Header cart={cart} />
-            <Shipment
-              cart={cart}
-              deliveryDetails={deliveryDetails}
-              deliveryDetailsHandler={deliveryDetailsHandler}
-              checkOutItemHandler={checkOutItemHandler}
-              clearCart={clearCart}
-            />
-          </PrivateRoute>
+        <PrivateRoute path="/checkout" restricted="Customer">
+          <Header cart={cart} />
+          <Shipment
+            cart={cart}
+            deliveryDetails={deliveryDetails}
+            deliveryDetailsHandler={deliveryDetailsHandler}
+            checkOutItemHandler={checkOutItemHandler}
+            clearCart={clearCart}
+          />
+        </PrivateRoute>
 
-          <PrivateRoute path="/order-complete">
-            <Header cart={cart} />
-            <OrderComplete deliveryDetails={deliveryDetails} />
-          </PrivateRoute>
+        <PrivateRoute path="/order-complete" restricted="Customer">
+          <Header cart={cart} />
+          <OrderComplete deliveryDetails={deliveryDetails} />
+        </PrivateRoute>
 
-          <Route path="/signup">
-            <SignUp />
-          </Route>
+        <Route path="/signup">
+          <SignUp />
+        </Route>
 
-          <Route path="*">
-            <NotFound />
-          </Route>
-        </Switch>
-      </Router>
-    </AuthProvider>
+        <Route path="*">
+          <NotFound />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 

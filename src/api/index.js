@@ -8,6 +8,8 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  query,
+  where,
 } from "@firebase/firestore";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
@@ -20,14 +22,22 @@ export const getUsers = async () => {
   let userdata = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   console.log(userdata);
 };
-
+export const getUserType = async (email) => {
+  const q = query(usersCollectionRef, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  let type;
+  querySnapshot.forEach((doc) => {
+    type = doc.data().type;
+  });
+  return type;
+};
 export const deleteUser = async (id) => {
   const userDoc = doc(db, "users", id);
   await deleteDoc(userDoc);
   console.log("done");
 };
-export const createUser = async (newName, newAge) => {
-  await addDoc(usersCollectionRef, { name: newName, age: Number(newAge) });
+export const createUser = async (email, type) => {
+  await addDoc(usersCollectionRef, { email, type });
 };
 
 export const updateUser = async (id, age) => {

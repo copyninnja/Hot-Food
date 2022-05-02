@@ -4,6 +4,8 @@ import { RestaurantsContext } from "../context/RestaurantsContext";
 import { FILTER_ITEMS } from "../helpers/constants";
 import { isFiltersActive } from "../helpers/utils";
 import "./index.css";
+import { useAuth } from "../context/useAuth";
+import { useHistory } from "react-router-dom/";
 
 const CustomerMenu = () => {
   const { restaurants, getRestaurants } = useContext(RestaurantsContext);
@@ -11,10 +13,21 @@ const CustomerMenu = () => {
   const { allRestaurants } = restaurants;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-
+  const auth = useAuth();
+  const history = useHistory();
   useEffect(() => {
     getRestaurants();
-  }, [getRestaurants]);
+  }, [restaurants]);
+
+  useEffect(() => {
+    if (auth.user) {
+      if (auth.user.type === "Restaurant") {
+        history.push("/Restaurant");
+      } else if (auth.user.type === "Admin") {
+        history.push("/Admin");
+      }
+    }
+  }, [auth]);
 
   useEffect(() => {
     const searchRestaurants = () => {

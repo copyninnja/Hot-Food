@@ -14,11 +14,17 @@ const SignUp = () => {
     console.log(data); //TODO 修改 用户类型 data.type
     if (returningUser) {
       if (data.email && data.password) {
-        auth.signIn(data.email, data.password);
+        auth.signIn(data.email, data.password, data.type);
       }
     } else {
-      if (data.name && data.email && data.password && data.confirm_password) {
-        auth.signUp(data.email, data.confirm_password, data.name);
+      if (
+        data.name &&
+        data.email &&
+        data.password &&
+        data.confirm_password &&
+        data.type
+      ) {
+        auth.signUp(data.email, data.confirm_password, data.name, data.type);
       }
     }
   };
@@ -63,23 +69,70 @@ const SignUp = () => {
                 <span className="error">Password is required</span>
               )}
             </div>
-
             <div className="form-group">
+              <ul className="radios">
+                <li>
+                  <label>Customer</label>
+                  <input
+                    className="radioItem"
+                    type="radio"
+                    name="type"
+                    id="type1"
+                    value="Customer"
+                    ref={register({ required: true })}
+                    checked={radioValue === "Customer"}
+                    onChange={handleChange}
+                  />
+                </li>
+                <li>
+                  <label>Restaurant</label>
+                  <input
+                    className="radioItem"
+                    type="radio"
+                    name="type"
+                    id="type2"
+                    value="Restaurant"
+                    ref={register({ required: true })}
+                    checked={radioValue === "Restaurant"}
+                    onChange={handleChange}
+                  />
+                </li>
+                <li>
+                  <label>Admin</label>
+                  <input
+                    className="radioItem"
+                    type="radio"
+                    name="type"
+                    id="type3"
+                    value="Admin"
+                    ref={register({ required: true })}
+                    checked={radioValue === "Admin"}
+                    onChange={handleChange}
+                  />
+                </li>
+              </ul>
+            </div>
+            <div className="form-group">
+              {/* <Link to={"/" + radioValue}> */}
               <button className="btn btn-danger btn-block" type="submit">
                 Sign In
               </button>
+              {/* </Link> */}
             </div>
 
             <div className="text-center my-0">
               <label> or </label>
             </div>
 
+            {/* <Link to={"/" + radioValue}> */}
             <button
               className="btn btn-success  btn-block"
               onClick={auth.signInWithGoogle}
             >
               Sign in with Google
             </button>
+            {/* </Link> */}
+
             <div className="option text-center my-3">
               <label onClick={() => setReturningUser(false)}>
                 Create a new Account
@@ -187,9 +240,11 @@ const SignUp = () => {
             </div>
 
             <div className="form-group">
+              {/* <Link to={"/" + radioValue}> */}
               <button className="btn btn-danger btn-block" type="submit">
                 Sign Up
               </button>
+              {/* </Link> */}
             </div>
 
             <div className="option text-center my-3">
