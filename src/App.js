@@ -71,6 +71,7 @@ function App() {
       <Switch>
         <PrivateRoute path="/Restaurant" restricted="Restaurant">
           <Header cart={cart} />
+          <RestaurantPage></RestaurantPage>
         </PrivateRoute>
         <PrivateRoute path="/Admin" restricted="Admin">
           NOW developing{" "}

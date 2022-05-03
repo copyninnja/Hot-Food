@@ -20,7 +20,6 @@ const usersCollectionRef = collection(db, "users");
 export const getUsers = async () => {
   const data = await getDocs(usersCollectionRef);
   let userdata = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  console.log(userdata);
 };
 export const getUserType = async (email) => {
   const q = query(usersCollectionRef, where("email", "==", email));
@@ -34,7 +33,6 @@ export const getUserType = async (email) => {
 export const deleteUser = async (id) => {
   const userDoc = doc(db, "users", id);
   await deleteDoc(userDoc);
-  console.log("done");
 };
 export const createUser = async (email, type) => {
   await addDoc(usersCollectionRef, { email, type });

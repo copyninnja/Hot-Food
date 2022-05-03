@@ -69,7 +69,6 @@ const Auth = () => {
           const currentUser = user;
           currentUser.type = type === undefined ? "Customer" : type;
           setUser(currentUser);
-          console.log(currentUser.type);
           window.history.back();
         };
         fetchData();
