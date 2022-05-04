@@ -5,6 +5,7 @@ import Logo from "../../images/logo2.png";
 import userPhoto from "../../images/ICON/Group 2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faAddressBook } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/useAuth";
 
 const Header = (props) => {
@@ -21,6 +22,13 @@ const Header = (props) => {
           <li className="nav-item active">
             <Link to="/checkout" className="nav-link">
               <FontAwesomeIcon icon={faCartArrowDown} />
+              <span className="badge bg-light">{props.cart.length}</span>
+            </Link>
+          </li>
+
+          <li className="nav-item active">
+            <Link to="/addAddress" className="nav-link">
+              <FontAwesomeIcon icon={faAddressBook} />
               <span className="badge bg-light">{props.cart.length}</span>
             </Link>
           </li>

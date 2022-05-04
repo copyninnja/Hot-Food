@@ -16,6 +16,7 @@ import FoodDetails from "./components/FoodDetails/FoodDetails";
 import NotFound from "./components/NotFound/NotFound";
 import SignUp from "./components/SignUp/SignUp";
 import Shipment from "./components/Shipment/Shipment";
+import AddressItem from "./components/AddressItem/AddressItem";
 import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
 import { RestaurantsContext } from "./context/RestaurantsContext";
@@ -102,6 +103,17 @@ function App() {
         <PrivateRoute path="/checkout" restricted="Customer">
           <Header cart={cart} />
           <Shipment
+            cart={cart}
+            deliveryDetails={deliveryDetails}
+            deliveryDetailsHandler={deliveryDetailsHandler}
+            checkOutItemHandler={checkOutItemHandler}
+            clearCart={clearCart}
+          />
+        </PrivateRoute>
+
+        <PrivateRoute path="/addAddress" restricted="Customer">
+          <Header cart={cart} />
+          <AddressItem
             cart={cart}
             deliveryDetails={deliveryDetails}
             deliveryDetailsHandler={deliveryDetailsHandler}
