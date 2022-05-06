@@ -21,7 +21,7 @@ const restaurantsCollectionRef = collection(db, "restaurants");
 export const getRestaurantsRaw = async () => {
   const data = await getDocs(restaurantsCollectionRef);
   let restaurantsData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  console.log(restaurantsData);
+  return restaurantsData;
 };
 export const getUserTypeAndStatus = async (email) => {
   const q = query(usersCollectionRef, where("email", "==", email));

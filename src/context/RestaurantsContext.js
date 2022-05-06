@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback } from "react";
-import { getRestaurants } from "../api";
+import { getRestaurantsRaw } from "../api";
 
 export const RestaurantsContext = createContext();
 
@@ -7,18 +7,11 @@ const RestaurantsContextProvider = (props) => {
   const [restaurants, setRestaurants] = useState({ allRestaurants: null });
 
   const getRestaurants = useCallback(() => {
-    return fetch("/data.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then(function (response) {
-        return response.json();
-      })
+    return getRestaurantsRaw()
       .then(function (jsonData) {
+        console.log(jsonData);
         setRestaurants({
-          allRestaurants: jsonData.restaurants,
+          allRestaurants: jsonData,
         });
       })
       .catch((error) => {

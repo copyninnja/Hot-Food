@@ -17,7 +17,7 @@ const RestaurantCard = ({ item, highlight, discount }) => {
       </div>
       <Link to={`restaurants/${item.id}/`} className="itemImgWrapper">
         <img
-          src={item.imageSmallUrl || DEFAULT_PLACEHOLDER_IMAGE}
+          src={item.photo || DEFAULT_PLACEHOLDER_IMAGE}
           alt={`${item.name}`}
           height={200}
           className="itemImg"
