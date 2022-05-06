@@ -1,42 +1,4 @@
 {
-  "featuredRestaurants": [
-    {
-      "discount": 10,
-      "restaurantId": 908
-    },
-    {
-      "discount": 23,
-      "restaurantId": "71"
-    },
-    {
-      "discount": 33,
-      "restaurantId": "2324"
-    },
-    {
-      "discount": 21,
-      "restaurantId": "117"
-    },
-    {
-      "discount": 23,
-      "restaurantId": "1302"
-    },
-    {
-      "discount": 90,
-      "restaurantId": "1004"
-    },
-    {
-      "discount": 12,
-      "restaurantId": "617"
-    },
-    {
-      "discount": 45,
-      "restaurantId": "459"
-    },
-    {
-      "discount": 60,
-      "restaurantId": "1895"
-    }
-  ],
   "restaurants": [
     {
       "description": "Fresh, homemade Mediterranean food made with love",

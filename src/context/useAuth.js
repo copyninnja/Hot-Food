@@ -6,7 +6,7 @@ import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import "firebase/analytics";
 import firebase from "firebase/compat/app";
-import { createUser, getUserType } from "../api";
+import { createUser, getUserTypeAndStatus } from "../api";
 
 //***************** Fire base Initialization ************************
 const db = getFirestore(firebase.initializeApp(firebaseConfig));
@@ -65,9 +65,10 @@ const Auth = () => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         const fetchData = async () => {
-          const type = await getUserType(user.email);
+          const { type, status } = await getUserTypeAndStatus(user.email);
           const currentUser = user;
           currentUser.type = type === undefined ? "Customer" : type;
+          currentUser.status = status;
           setUser(currentUser);
           window.history.back();
         };
@@ -109,6 +110,8 @@ const Auth = () => {
   };
 
   const signUp = (email, password, name, type) => {
+    // console.log(type, type === "Restaurant");
+    // createUser(email, type, "Not verified");
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -119,7 +122,9 @@ const Auth = () => {
             displayName: name,
           })
           .then(() => {
-            createUser(email, type);
+            type === "Restaurant"
+              ? createUser(email, type, "Not verified")
+              : createUser(email, type, null);
             let thisUser = result.user;
             thisUser.type = type;
             setUser(thisUser);

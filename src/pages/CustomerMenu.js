@@ -17,7 +17,7 @@ const CustomerMenu = () => {
   const history = useHistory();
   useEffect(() => {
     getRestaurants();
-  }, [restaurants]);
+  }, []);
 
   useEffect(() => {
     if (auth.user) {

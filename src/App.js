@@ -8,7 +8,7 @@ import {
   Redirect,
   Switch,
 } from "react-router-dom";
-import { PrivateRoute, useAuth } from "./context/useAuth";
+import { PrivateRoute } from "./context/useAuth";
 import Header from "./components/Header/Header";
 import Banner from "./components/Banner/Banner";
 import Foods from "./components/Foods/Foods";
@@ -19,14 +19,16 @@ import Shipment from "./components/Shipment/Shipment";
 import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
 import { RestaurantsContext } from "./context/RestaurantsContext";
-import RestaurantPage from "./pages/CustomerMenu";
+import RestaurantsPage from "./pages/CustomerMenu";
+import RestaurantPage from "./pages/RestaurantPage";
 import { FILTER_ITEMS } from "./helpers/constants";
 import { isFiltersActive } from "./helpers/utils";
-
+import RestaurantsContextProvider from "./context/RestaurantsContext";
+import { AuthProvider } from "./context/useAuth";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
-  const auth = useAuth();
+
   const cartHandler = (currentFood) => {
     const alreadyAdded = cart.find((item) => item.id === currentFood.id);
 
@@ -67,63 +69,68 @@ function App() {
   };
 
   return (
-    <Router>
-      <Switch>
-        <PrivateRoute path="/Restaurant" restricted="Restaurant">
-          <Header cart={cart} />
-          <RestaurantPage></RestaurantPage>
-        </PrivateRoute>
-        <PrivateRoute path="/Admin" restricted="Admin">
-          NOW developing{" "}
-        </PrivateRoute>
+    <RestaurantsContextProvider>
+      <AuthProvider>
+        <Router>
+          <Switch>
+            <PrivateRoute path="/Restaurant" restricted="Restaurant">
+              <Header cart={cart} />
+              <RestaurantPage></RestaurantPage>
+            </PrivateRoute>
 
-        <Route exact path="/">
-          <Header cart={cart} />
-          <RestaurantPage />
-        </Route>
+            <PrivateRoute path="/Admin" restricted="Admin">
+              NOW developing{" "}
+            </PrivateRoute>
 
-        <Route exact path="/restaurants/:restaurantId">
-          <Header cart={cart} />
-          <Banner />
-          <Foods cart={cart} />
-        </Route>
+            <Route exact path="/">
+              <Header cart={cart} />
+              <RestaurantsPage />
+            </Route>
 
-        <Route path="/restaurants/:restaurantId/food/:id">
-          <Header cart={cart} />
-          <FoodDetails cart={cart} cartHandler={cartHandler} />
-        </Route>
+            <Route exact path="/restaurants/:restaurantId">
+              <Header cart={cart} />
+              <Banner />
+              <Foods cart={cart} />
+            </Route>
 
-        <Route path="/search=:searchQuery">
-          <Header cart={cart} />
-          <Banner />
-          <SearchResult />
-        </Route>
+            <Route path="/restaurants/:restaurantId/food/:id">
+              <Header cart={cart} />
+              <FoodDetails cart={cart} cartHandler={cartHandler} />
+            </Route>
 
-        <PrivateRoute path="/checkout" restricted="Customer">
-          <Header cart={cart} />
-          <Shipment
-            cart={cart}
-            deliveryDetails={deliveryDetails}
-            deliveryDetailsHandler={deliveryDetailsHandler}
-            checkOutItemHandler={checkOutItemHandler}
-            clearCart={clearCart}
-          />
-        </PrivateRoute>
+            <Route path="/search=:searchQuery">
+              <Header cart={cart} />
+              <Banner />
+              <SearchResult />
+            </Route>
 
-        <PrivateRoute path="/order-complete" restricted="Customer">
-          <Header cart={cart} />
-          <OrderComplete deliveryDetails={deliveryDetails} />
-        </PrivateRoute>
+            <PrivateRoute path="/checkout" restricted="Customer">
+              <Header cart={cart} />
+              <Shipment
+                cart={cart}
+                deliveryDetails={deliveryDetails}
+                deliveryDetailsHandler={deliveryDetailsHandler}
+                checkOutItemHandler={checkOutItemHandler}
+                clearCart={clearCart}
+              />
+            </PrivateRoute>
 
-        <Route path="/signup">
-          <SignUp />
-        </Route>
+            <PrivateRoute path="/order-complete" restricted="Customer">
+              <Header cart={cart} />
+              <OrderComplete deliveryDetails={deliveryDetails} />
+            </PrivateRoute>
 
-        <Route path="*">
-          <NotFound />
-        </Route>
-      </Switch>
-    </Router>
+            <Route path="/signup">
+              <SignUp />
+            </Route>
+
+            <Route path="*">
+              <NotFound />
+            </Route>
+          </Switch>
+        </Router>
+      </AuthProvider>
+    </RestaurantsContextProvider>
   );
 }
 

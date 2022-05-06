@@ -1,4 +1,5 @@
 import React, { createContext, useState, useCallback } from "react";
+import { getRestaurants } from "../api";
 
 export const RestaurantsContext = createContext();
 

@@ -16,26 +16,30 @@ import firebaseConfig from "../firebaseconfig";
 
 const db = getFirestore(firebase.initializeApp(firebaseConfig));
 const usersCollectionRef = collection(db, "users");
+const restaurantsCollectionRef = collection(db, "restaurants");
 
-export const getUsers = async () => {
-  const data = await getDocs(usersCollectionRef);
-  let userdata = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+export const getRestaurantsRaw = async () => {
+  const data = await getDocs(restaurantsCollectionRef);
+  let restaurantsData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  console.log(restaurantsData);
 };
-export const getUserType = async (email) => {
+export const getUserTypeAndStatus = async (email) => {
   const q = query(usersCollectionRef, where("email", "==", email));
   const querySnapshot = await getDocs(q);
-  let type;
+  let type, status;
   querySnapshot.forEach((doc) => {
     type = doc.data().type;
+    status = doc.data().status;
   });
-  return type;
+  return { type, status };
 };
 export const deleteUser = async (id) => {
   const userDoc = doc(db, "users", id);
   await deleteDoc(userDoc);
 };
-export const createUser = async (email, type) => {
-  await addDoc(usersCollectionRef, { email, type });
+export const createUser = async (email, type, status) => {
+  // console.log(status == null, { email, type, status });
+  await addDoc(usersCollectionRef, { email, type, status });
 };
 
 export const updateUser = async (id, age) => {

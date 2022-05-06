@@ -4,7 +4,7 @@ import "./Header.css";
 import Logo from "../../images/logo2.png";
 import userPhoto from "../../images/ICON/Group 2.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCartArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { faCartArrowDown, faScroll } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/useAuth";
 
 const Header = (props) => {
@@ -19,6 +19,12 @@ const Header = (props) => {
 
         <ul className="navbar-nav align-items-center">
           <li className="nav-item active">
+            <Link to="/orders" className="nav-link">
+              <FontAwesomeIcon icon={faScroll} />
+            </Link>
+          </li>
+
+          <li className="nav-item ">
             <Link to="/checkout" className="nav-link">
               <FontAwesomeIcon icon={faCartArrowDown} />
               <span className="badge bg-light">{props.cart.length}</span>
