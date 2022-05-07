@@ -20,7 +20,7 @@ import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
 import { RestaurantsContext } from "./context/RestaurantsContext";
 import RestaurantsPage from "./pages/CustomerMenu";
-import RestaurantPage from "./pages/RestaurantPage";
+import RestaurantPage from "./pages/RestaurantSignUpPage";
 import { FILTER_ITEMS } from "./helpers/constants";
 import { isFiltersActive } from "./helpers/utils";
 import RestaurantsContextProvider from "./context/RestaurantsContext";

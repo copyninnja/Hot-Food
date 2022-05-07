@@ -2,15 +2,13 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import firebaseConfig from "../firebaseconfig";
 import { Route, Redirect, useHistory } from "react-router-dom";
 import { getFirestore } from "@firebase/firestore";
+import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import "firebase/analytics";
-import firebase from "firebase/compat/app";
 import { createUser, getUserTypeAndStatus } from "../api";
 
 //***************** Fire base Initialization ************************
-const db = getFirestore(firebase.initializeApp(firebaseConfig));
-
 const AuthContext = createContext();
 
 export const AuthProvider = (props) => {
@@ -60,6 +58,8 @@ const getUser = (user) => {
 
 const Auth = () => {
   const [user, setUser] = useState(null);
+  const uid = user ? user.uid : null;
+  // const url = firebase.storage().ref().child(`images/${uid}/diploma.jpg`);
   // const usersCollectionRef = collection(db, "users"); //表名
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {

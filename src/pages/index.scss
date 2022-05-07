@@ -14,4 +14,15 @@
   flex-wrap: wrap;
   align-items: center;
   flex-direction: column;
+  p {
+    font-size: large;
+  }
+}
+.sign-up {
+  background-image: url(../images/signup-bg.png);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+  height: 100vh;
+  box-sizing: content-box;
 }

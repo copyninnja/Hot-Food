@@ -9,7 +9,6 @@ const RestaurantsContextProvider = (props) => {
   const getRestaurants = useCallback(() => {
     return getRestaurantsRaw()
       .then(function (jsonData) {
-        console.log(jsonData);
         setRestaurants({
           allRestaurants: jsonData,
         });
