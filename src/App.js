@@ -16,6 +16,7 @@ import FoodDetails from "./components/FoodDetails/FoodDetails";
 import NotFound from "./components/NotFound/NotFound";
 import SignUp from "./components/SignUp/SignUp";
 import Shipment from "./components/Shipment/Shipment";
+import AddressItem from "./components/AddressItem/AddressItem";
 import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
 import { RestaurantsContext } from "./context/RestaurantsContext";
@@ -104,9 +105,9 @@ function App() {
               <SearchResult />
             </Route>
 
-            <PrivateRoute path="/checkout" restricted="Customer">
+            <PrivateRoute path="/addAddress" restricted="Customer">
               <Header cart={cart} />
-              <Shipment
+              <AddressItem
                 cart={cart}
                 deliveryDetails={deliveryDetails}
                 deliveryDetailsHandler={deliveryDetailsHandler}
