@@ -20,6 +20,7 @@ const db = getFirestore(init);
 const storage = getStorage(init);
 const usersCollectionRef = collection(db, "users");
 const restaurantsCollectionRef = collection(db, "restaurants");
+const requestCollectionRef = collection(db, "request");
 
 export const uploadImg = async (uid, file) => {
   const storageRef = ref(storage, `images/${uid}/diploma.jpg`);
@@ -59,5 +60,6 @@ export const updateUser = async (id, age) => {
 };
 export const createRequest = async (data) => {
   console.log(data);
+  // {category: 'Burgers', price: '2', Restaurant Name: '1', description: '2', place: '3'}
   // await addDoc(usersCollectionRef, { email, type, status });
 };

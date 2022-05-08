@@ -74,6 +74,10 @@ function App() {
       <AuthProvider>
         <Router>
           <Switch>
+            <Route exact path="/test">
+              <AdminPage />
+            </Route>
+
             <PrivateRoute path="/Restaurant" restricted="Restaurant">
               <Header cart={cart} />
               <RestaurantPage></RestaurantPage>

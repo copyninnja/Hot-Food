@@ -18,13 +18,8 @@ const RestaurantPage = () => {
       setStatus(auth.user.status);
     }
   }, [auth]);
-  function extend(target, source) {
-    for (var obj in source) {
-      target[obj] = source[obj];
-    }
-    return target;
-  }
   const onSubmit = (data) => {
+    data.RestaurantID = auth.user.uid;
     const a = Object.assign(rawData, data);
     createRequest(a);
   };
@@ -109,6 +104,18 @@ const RestaurantPage = () => {
             }}
           >
             <Button icon={<UploadOutlined />}>FBR_LICENSE</Button>
+          </Upload>
+        </div>
+        <div className="form-group">
+          <Upload
+            action="https://europe-west2-tactile-octagon-298212.cloudfunctions.net/function-2"
+            listType="picture"
+            className="upload-list-inline"
+            onChange={(event) => {
+              imageUpload(event.file);
+            }}
+          >
+            <Button icon={<UploadOutlined />}>Restaurant photo</Button>
           </Upload>
         </div>
         <div className="form-group">
