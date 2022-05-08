@@ -74,7 +74,7 @@ const RestaurantPage = () => {
         <div className="form-group">
           <Select
             defaultValue="Category"
-            style={{ width: 120 }}
+            style={{ width: 200 }}
             onChange={handleCategoryChange}
             id="1"
           >
@@ -86,7 +86,7 @@ const RestaurantPage = () => {
           </Select>
           <Select
             defaultValue="Price"
-            style={{ width: 120 }}
+            style={{ width: 200 }}
             onChange={handlePriceChange}
             id="2"
           >
@@ -95,6 +95,8 @@ const RestaurantPage = () => {
             <Option value="3">30-40</Option>
             <Option value="4">{">"}40</Option>
           </Select>
+        </div>
+        <div className="form-group">
           <Upload
             action="https://europe-west2-tactile-octagon-298212.cloudfunctions.net/function-2"
             listType="picture"
