@@ -10,14 +10,14 @@
   flex-wrap: wrap;
 }
 
-#restStatus {
+.restStatus {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   flex-direction: column;
 }
 
-#restStatus p {
+.restStatus p {
   font-size: large;
 }
 
@@ -28,4 +28,8 @@
   background-position: bottom;
   height: 100vh;
   box-sizing: content-box;
+}
+
+.dishButton {
+  margin-top: var(--fontsize);
 }

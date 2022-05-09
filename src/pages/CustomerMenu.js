@@ -22,7 +22,10 @@ const CustomerMenu = () => {
   useEffect(() => {
     if (auth.user) {
       if (auth.user.type === "Restaurant") {
-        history.push("/Restaurant");
+        console.log(auth.user);
+        auth.user.status == "Not verified"
+          ? history.push("/RestaurantSignUp")
+          : history.push("/Restaurant");
       } else if (auth.user.type === "Admin") {
         history.push("/Admin");
       }

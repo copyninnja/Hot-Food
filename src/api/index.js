@@ -20,15 +20,20 @@ const db = getFirestore(init);
 const storage = getStorage(init);
 const usersCollectionRef = collection(db, "users");
 const restaurantsCollectionRef = collection(db, "restaurants");
-const requestCollectionRef = collection(db, "request");
+const requestCollectionRef = collection(db, "adminList");
 
-export const uploadImg = async (uid, file) => {
-  const storageRef = ref(storage, `images/${uid}/diploma.jpg`);
+export const uploadDiplomaImg = async (uid, file) => {
+  const storageRef = ref(storage, `diploma/${uid}/diploma.jpg`);
   uploadBytes(storageRef, file).then((snapshot) => {
     console.log("Uploaded a blob or file!");
   });
 };
-
+export const uploadRestaurantImg = async (uid, file) => {
+  const storageRef = ref(storage, `restaurantPhoto/${uid}/photo.jpg`);
+  uploadBytes(storageRef, file).then((snapshot) => {
+    console.log("Uploaded a blob or file!");
+  });
+};
 export const getRestaurantsRaw = async () => {
   const data = await getDocs(restaurantsCollectionRef);
   let restaurantsData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
@@ -59,7 +64,8 @@ export const updateUser = async (id, age) => {
   await updateDoc(userDoc, newFields);
 };
 export const createRequest = async (data) => {
+  data.status = "Not verified";
   console.log(data);
   // {category: 'Burgers', price: '2', Restaurant Name: '1', description: '2', place: '3'}
-  // await addDoc(usersCollectionRef, { email, type, status });
+  await addDoc(requestCollectionRef, data);
 };

@@ -9,7 +9,7 @@
   display: flex;
   flex-wrap: wrap;
 }
-#restStatus {
+.restStatus {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -25,4 +25,7 @@
   background-position: bottom;
   height: 100vh;
   box-sizing: content-box;
+}
+.dishButton {
+  margin-top: var(--fontsize);
 }

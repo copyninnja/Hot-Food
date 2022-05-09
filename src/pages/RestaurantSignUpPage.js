@@ -6,7 +6,7 @@ import { Select } from "antd";
 import "antd/dist/antd.css";
 import { Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { uploadImg, createRequest } from "../api";
+import { uploadDiplomaImg, createRequest, uploadRestaurantImg } from "../api";
 const RestaurantPage = () => {
   const auth = useAuth();
   const [status, setStatus] = useState(null);
@@ -23,8 +23,11 @@ const RestaurantPage = () => {
     const a = Object.assign(rawData, data);
     createRequest(a);
   };
-  const imageUpload = (data) => {
-    uploadImg(auth.user.uid, data);
+  const diplomaUpload = (data) => {
+    uploadDiplomaImg(auth.user.uid, data);
+  };
+  const photoUpload = (data) => {
+    uploadRestaurantImg(auth.user.uid, data);
   };
   const { Option } = Select;
   function handleCategoryChange(value) {
@@ -40,7 +43,7 @@ const RestaurantPage = () => {
 
   return (
     <div className="sign-up">
-      <div id="restStatus">
+      <div className="restStatus">
         <p>restaurant status: {status}</p>
       </div>
       <form onSubmit={handleSubmit(onSubmit)} className="py-3">
@@ -102,7 +105,7 @@ const RestaurantPage = () => {
             listType="picture"
             className="upload-list-inline"
             onChange={(event) => {
-              imageUpload(event.file);
+              diplomaUpload(event.file);
             }}
           >
             <Button icon={<UploadOutlined />}>FBR_LICENSE</Button>
@@ -114,7 +117,7 @@ const RestaurantPage = () => {
             listType="picture"
             className="upload-list-inline"
             onChange={(event) => {
-              imageUpload(event.file);
+              photoUpload(event.file);
             }}
           >
             <Button icon={<UploadOutlined />}>Restaurant photo</Button>

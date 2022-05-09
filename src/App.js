@@ -1,33 +1,23 @@
-import React, { useState, useContext, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Redirect,
-  Switch,
-} from "react-router-dom";
-import { PrivateRoute } from "./context/useAuth";
-import Header from "./components/Header/Header";
-import Banner from "./components/Banner/Banner";
-import Foods from "./components/Foods/Foods";
-import FoodDetails from "./components/FoodDetails/FoodDetails";
-import NotFound from "./components/NotFound/NotFound";
-import SignUp from "./components/SignUp/SignUp";
-import Shipment from "./components/Shipment/Shipment";
 import AddressItem from "./components/AddressItem/AddressItem";
+import AdminPage from "./components/AdminPage/AdminPage";
+import Banner from "./components/Banner/Banner";
+import FoodDetails from "./components/FoodDetails/FoodDetails";
+import Foods from "./components/Foods/Foods";
+import Header from "./components/Header/Header";
+import NotFound from "./components/NotFound/NotFound";
 import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
-import { RestaurantsContext } from "./context/RestaurantsContext";
-import RestaurantsPage from "./pages/CustomerMenu";
-import RestaurantPage from "./pages/RestaurantSignUpPage";
-import { FILTER_ITEMS } from "./helpers/constants";
-import { isFiltersActive } from "./helpers/utils";
+import SignUp from "./components/SignUp/SignUp";
 import RestaurantsContextProvider from "./context/RestaurantsContext";
-import { AuthProvider } from "./context/useAuth";
-import AdminPage from "./components/AdminPage/AdminPage";
+import { AuthProvider, PrivateRoute } from "./context/useAuth";
 import ViewportProvider from "./context/ViewportContext";
+import RestaurantsPage from "./pages/CustomerMenu";
+import RestaurantSignUpPage from "./pages/RestaurantSignUpPage";
+import RestaurantFoodPage from "./pages/RestaurantFoodPage";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
@@ -77,13 +67,18 @@ function App() {
         <AuthProvider>
           <Router>
             <Switch>
-              <Route exact path="/test">
+              <Route exact path="/Admin">
                 <AdminPage />
               </Route>
 
+              <PrivateRoute path="/RestaurantSignUp" restricted="Restaurant">
+                <Header cart={cart} />
+                <RestaurantSignUpPage></RestaurantSignUpPage>
+              </PrivateRoute>
+
               <PrivateRoute path="/Restaurant" restricted="Restaurant">
                 <Header cart={cart} />
-                <RestaurantPage></RestaurantPage>
+                <RestaurantFoodPage></RestaurantFoodPage>
               </PrivateRoute>
 
               <PrivateRoute path="/Admin" restricted="Admin">
@@ -98,7 +93,7 @@ function App() {
               <Route exact path="/restaurants/:restaurantId">
                 <Header cart={cart} />
                 <Banner />
-                <Foods cart={cart} />
+                <Foods cart={cart} from="customer" />
               </Route>
 
               <Route path="/restaurants/:restaurantId/food/:id">
