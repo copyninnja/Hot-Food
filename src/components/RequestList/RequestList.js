@@ -1,31 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import 'antd/dist/antd.css';
 import { List, message, Avatar, Skeleton, Divider } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-const InfiniteListExample = () => {
+import { getAllRequestList,getDoneRequestList } from '../../api';
+const InfiniteListExample = (select) => {
+  //console.log("begin",select.select)
+ 
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
+  //return different list based on select
 
   const loadMoreData = () => {
     if (loading) {
-      return;
+      console.log("loading..");
+      //return;
     }
     setLoading(true);
-    fetch('https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo')
-      .then(res => res.json())
-      .then(body => {
-        setData([...data, ...body.results]);
-        setLoading(false);
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    
+    if(select.select === 1){
+      //getAllRequestList()
+      console.log("here")
+      getAllRequestList().then(res=> {
+                   console.log("res",res)
+                   setData(res)
+                   setLoading(false) 
+                   console.log("data",data)
+              })
+             .catch(()=>{
+               setLoading(false)
+             })
+    }else{
+      const doneList = getDoneRequestList()
+      doneList.then(res=> console.log(res))
+              .then(()=>{
+                setLoading(false)
+              })
+             .catch(()=>{
+               setLoading(false)
+             })
+      }
+    
   };
 
   useEffect(() => {
     loadMoreData();
-  }, []);
+    console.log("select","111")
+  }, [select]);
+
 
   return (
     <div
@@ -50,11 +71,10 @@ const InfiniteListExample = () => {
           renderItem={item => (
             <List.Item key={item.id}>
               <List.Item.Meta
-                // avatar={<Avatar src={item.picture.large} />}
-                title={<a href="https://ant.design">{item.name.last}</a>}
-                description={item.email}
+                title={<a href="https://ant.design">{item.RestaurantName}</a>}
+                description={item.RestaurantEmail}
               />
-              <div>Content</div>
+              <div>{item.status}</div>
             </List.Item>
           )}
         />

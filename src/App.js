@@ -87,7 +87,7 @@ function App() {
               </PrivateRoute>
 
               <PrivateRoute path="/Admin" restricted="Admin">
-                NOW developing{" "}
+                <AdminPage />
               </PrivateRoute>
 
               <Route exact path="/">
