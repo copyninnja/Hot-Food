@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 import {
   getFirestore,
   collection,
@@ -10,6 +8,8 @@ import {
   doc,
   query,
   where,
+  orderBy,
+  onSnapshot,
 } from "@firebase/firestore";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
@@ -21,6 +21,8 @@ const storage = getStorage(init);
 const usersCollectionRef = collection(db, "users");
 const restaurantsCollectionRef = collection(db, "restaurants");
 const requestCollectionRef = collection(db, "adminList");
+const notificationCollectionRef = collection(db, "notifications");
+const addressCollectionRef = collection(db, "Address");
 
 export const uploadDiplomaImg = async (uid, file) => {
   const storageRef = ref(storage, `diploma/${uid}/diploma.jpg`);
@@ -33,6 +35,40 @@ export const uploadRestaurantImg = async (uid, file) => {
   uploadBytes(storageRef, file).then((snapshot) => {
     console.log("Uploaded a blob or file!");
   });
+};
+export const uploadDishImg = async (uid, file) => {
+  const storageRef = ref(storage, `dishPhoto/${uid}/photo.jpg`);
+  uploadBytes(storageRef, file).then((snapshot) => {
+    console.log("Uploaded a blob or file!");
+  });
+};
+
+export const getAllRequestList = async () => {
+  let listArr = [];
+  const q = query(requestCollectionRef, orderBy("time", "desc"));
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    let requestList = {};
+    querySnapshot.forEach((doc) => {
+      requestList = doc.data();
+      listArr.push(requestList);
+    });
+  });
+  console.log("fucall", listArr);
+  return listArr;
+};
+
+export const getDoneRequestList = async () => {
+  let listArr = [];
+  const qs = query(requestCollectionRef, where("status", "!=", "Not verified"));
+  const unsubscribe = onSnapshot(qs, (querySnapshot) => {
+    let requestLists = {};
+    querySnapshot.forEach((doc) => {
+      requestLists = doc.data();
+      listArr.push(requestLists);
+    });
+  });
+  console.log("fucdone", listArr);
+  return listArr;
 };
 export const getRestaurantsRaw = async () => {
   const data = await getDocs(restaurantsCollectionRef);
@@ -65,7 +101,35 @@ export const updateUser = async (id, age) => {
 };
 export const createRequest = async (data) => {
   data.status = "Not verified";
-  console.log(data);
+  data.time = Date.now();
   // {category: 'Burgers', price: '2', Restaurant Name: '1', description: '2', place: '3'}
   await addDoc(requestCollectionRef, data);
+};
+
+export const createNotification = async (data) => {
+  data.status = "Not seen";
+  // console.log(data);
+  // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
+  await addDoc(notificationCollectionRef, data);
+};
+
+export const createAddress = async (data) => {
+  // console.log(data);
+  // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
+  await addDoc(addressCollectionRef, data);
+};
+export const getAddressRaw = async (email) => {
+  const q = query(
+    collection(db, "Address"),
+    where("restaurantEmail", "==", email),
+    orderBy("restaurantEmail", "desc"),
+  );
+  const data = await getDocs(q);
+  let rawData;
+  data.forEach((doc) => {
+    rawData = doc.data();
+  });
+  return rawData;
+  // let addressData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  // return restaurantsData;
 };

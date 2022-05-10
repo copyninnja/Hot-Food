@@ -5,7 +5,6 @@ import Contentcard from "../ContentCard/ContentCard";
 import FoodRequest from "../FoodRequest/FoodRequest";
 const { Content } = Layout;
 const RequestDetail =()=>{
-  
         return(
             <Layout
             style={{
