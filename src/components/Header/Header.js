@@ -24,21 +24,19 @@ const Header = (props) => {
 
         <ul className="navbar-nav align-items-center">
           <li className="nav-item active">
+            <Link to="/addAddress" className="nav-link">
+              <FontAwesomeIcon icon={faAddressBook} />
+            </Link>
+          </li>
+          <li className="nav-item active">
             <Link to="/orders" className="nav-link">
               <FontAwesomeIcon icon={faScroll} />
             </Link>
           </li>
 
-          <li className="nav-item ">
+          <li className="nav-item active">
             <Link to="/checkout" className="nav-link">
               <FontAwesomeIcon icon={faCartArrowDown} />
-              <span className="badge bg-light">{props.cart.length}</span>
-            </Link>
-          </li>
-
-          <li className="nav-item active">
-            <Link to="/addAddress" className="nav-link">
-              <FontAwesomeIcon icon={faAddressBook} />
               <span className="badge bg-light">{props.cart.length}</span>
             </Link>
           </li>

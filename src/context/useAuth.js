@@ -28,7 +28,7 @@ export const PrivateRoute = ({ restricted, children, ...rest }) => {
       {...rest}
       render={({ location }) =>
         auth.user ? (
-          auth.user.type === restricted ? (
+          auth.user.type === restricted || !restricted ? (
             children
           ) : (
             <Redirect

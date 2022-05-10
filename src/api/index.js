@@ -23,6 +23,7 @@ const restaurantsCollectionRef = collection(db, "restaurants");
 const requestCollectionRef = collection(db, "adminList");
 const notificationCollectionRef = collection(db, "notifications");
 const addressCollectionRef = collection(db, "Address");
+const orderCollectionRef = collection(db, "Order");
 
 export const uploadDiplomaImg = async (uid, file) => {
   const storageRef = ref(storage, `diploma/${uid}/diploma.jpg`);
@@ -122,7 +123,7 @@ export const getAddressRaw = async (email) => {
   const q = query(
     collection(db, "Address"),
     where("restaurantEmail", "==", email),
-    orderBy("restaurantEmail", "desc"),
+    orderBy("time", "desc"),
   );
   const data = await getDocs(q);
   let rawData;
@@ -130,6 +131,45 @@ export const getAddressRaw = async (email) => {
     rawData = doc.data();
   });
   return rawData;
+  // let addressData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  // return restaurantsData;
+};
+export const createOrder = async (
+  cart,
+  email,
+  tax,
+  deliveryFee,
+  grandTotal,
+  address,
+  restaurantID,
+) => {
+  console.log(cart, email, tax, deliveryFee, grandTotal, address, restaurantID);
+  // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
+  await addDoc(orderCollectionRef, {
+    orderDetail: cart,
+    customerEmail: email,
+    tax: tax,
+    deliveryFee: deliveryFee,
+    grandTotal: grandTotal,
+    address: address,
+    restaurantID: restaurantID,
+    status: "not taken",
+    time: Date.now(),
+  });
+};
+export const getCustomerOrderRaw = async (email) => {
+  const q = query(
+    collection(db, "Order"),
+    where("customerEmail", "==", email),
+    orderBy("time", "desc"),
+  );
+  const data = await getDocs(q);
+  let rawData = [];
+  data.forEach((doc) => {
+    rawData.push(doc.data());
+  });
+  console.log(rawData);
+  // return rawData;
   // let addressData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
   // return restaurantsData;
 };

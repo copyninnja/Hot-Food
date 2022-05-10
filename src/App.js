@@ -13,15 +13,19 @@ import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
 import SignUp from "./components/SignUp/SignUp";
 import RestaurantsContextProvider from "./context/RestaurantsContext";
-import { AuthProvider, PrivateRoute } from "./context/useAuth";
+import { AuthProvider, PrivateRoute, useAuth } from "./context/useAuth";
 import ViewportProvider from "./context/ViewportContext";
 import RestaurantsPage from "./pages/CustomerMenu";
 import RestaurantSignUpPage from "./pages/RestaurantSignUpPage";
 import RestaurantFoodPage from "./pages/RestaurantFoodPage";
+import Shipment from "./components/Shipment/Shipment";
+import OrderPage from "./pages/OrderPage";
+import { createOrder } from "./api";
+import restaurants from "./fakeData/restaurants";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
-
+  const [restWhom, setRestWhom] = useState();
   const cartHandler = (currentFood) => {
     const alreadyAdded = cart.find((item) => item.id === currentFood.id);
 
@@ -33,14 +37,18 @@ function App() {
       setCart(newCart);
     }
   };
+  const restHandler = (restID) => {
+    console.log(restWhom);
+    restWhom ? setCart([]) : setRestWhom(restID);
+  };
 
   const [deliveryDetails, setDeliveryDetails] = useState({
-    toDoor: "Delivery To Door",
-    read: null,
-    businessName: null,
-    address: null,
+    phone: null,
+    address_line_1: null,
+    address_line_2: null,
+    postcode: null,
+    comment: null,
   });
-
   const deliveryDetailsHandler = (data) => {
     setDeliveryDetails(data);
   };
@@ -57,8 +65,18 @@ function App() {
     setCart(filteredCart);
   };
 
-  const clearCart = () => {
+  const clearCart = (email, tax, deliveryFee, grandTotal) => {
+    //TODO
     setCart([]);
+    createOrder(
+      cart,
+      email,
+      tax,
+      deliveryFee,
+      grandTotal,
+      deliveryDetails,
+      restWhom,
+    );
   };
 
   return (
@@ -70,7 +88,10 @@ function App() {
               <Route exact path="/Admin">
                 <AdminPage />
               </Route>
-
+              <PrivateRoute exact path="/orders">
+                <Header cart={cart} />
+                <OrderPage />
+              </PrivateRoute>
               <PrivateRoute path="/RestaurantSignUp" restricted="Restaurant">
                 <Header cart={cart} />
                 <RestaurantSignUpPage></RestaurantSignUpPage>
@@ -98,7 +119,11 @@ function App() {
 
               <Route path="/restaurants/:restaurantId/food/:id">
                 <Header cart={cart} />
-                <FoodDetails cart={cart} cartHandler={cartHandler} />
+                <FoodDetails
+                  cart={cart}
+                  cartHandler={cartHandler}
+                  restHandler={restHandler}
+                />
               </Route>
 
               <Route path="/search=:searchQuery">
@@ -106,6 +131,17 @@ function App() {
                 <Banner />
                 <SearchResult />
               </Route>
+
+              <PrivateRoute path="/checkout" restricted="Customer">
+                <Header cart={cart} />
+                <Shipment
+                  cart={cart}
+                  deliveryDetails={deliveryDetails}
+                  deliveryDetailsHandler={deliveryDetailsHandler}
+                  checkOutItemHandler={checkOutItemHandler}
+                  clearCart={clearCart}
+                />
+              </PrivateRoute>
 
               <PrivateRoute path="/addAddress" restricted="Customer">
                 <Header cart={cart} />

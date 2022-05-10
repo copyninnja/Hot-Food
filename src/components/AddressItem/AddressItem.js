@@ -8,7 +8,8 @@ const AddressItem = (props) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const { postcode, road, flat, contactName, contactNumber, description } = props.deliveryDetails;
+  const { postcode, road, flat, contactName, contactNumber, description } =
+    props.deliveryDetails;
 
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => props.deliveryDetailsHandler(data);
@@ -97,8 +98,6 @@ const AddressItem = (props) => {
               )}
             </div>
 
-            
-
             <div className="form-group">
               <textarea
                 name="Description"
@@ -118,20 +117,15 @@ const AddressItem = (props) => {
               <button className="btn btn-danger btn-block" type="submit">
                 Save
               </button>
-              
-              
             </div>
 
             <div className="form-group">
-            <Link to="/">
-              <button className="btn btn-danger btn-block">
-                Cancle
-              </button>
+              <Link to="/">
+                <button className="btn btn-danger btn-block">Cancle</button>
               </Link>
             </div>
           </form>
         </div>
-        
       </div>
     </div>
   );

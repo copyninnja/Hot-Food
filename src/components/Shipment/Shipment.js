@@ -1,17 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import "./Shipment.css";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-
+import { useAuth } from "../../context/useAuth";
+import { createAddress, getAddressRaw } from "../../api";
 const Shipment = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
+    getAddress();
+  }, []);
+  const getAddress = useCallback(() => {
+    return getAddressRaw(auth.user.email)
+      .then(function (jsonData) {
+        console.log(jsonData);
+        props.deliveryDetailsHandler(jsonData);
+      })
+      .catch((error) => {
+        console.log(
+          "Encountered an error with fetching and parsing data",
+          error,
+        );
+      });
   }, []);
 
-  const { toDoor, road, flat, businessName, address } = props.deliveryDetails;
+  const { phone, address_line_1, address_line_2, postcode, comment } =
+    props.deliveryDetails;
 
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = (data) => props.deliveryDetailsHandler(data);
+  const auth = useAuth();
+  const onSubmit = (data) => {
+    props.deliveryDetailsHandler(data);
+    data.restaurantEmail = auth.user.email;
+    data.time = Date.now();
+    // console.log(data);
+    createAddress(data);
+  };
 
   const subTotal = props.cart.reduce((acc, crr) => {
     return acc + crr.price * crr.quantity;
@@ -34,68 +57,68 @@ const Shipment = (props) => {
           <form onSubmit={handleSubmit(onSubmit)} className="py-5">
             <div className="form-group">
               <input
-                name="toDoor"
+                name="phone"
                 className="form-control"
                 ref={register({ required: true })}
-                defaultValue={toDoor}
-                placeholder="Delivery To Door"
+                defaultValue={phone}
+                placeholder="Phone number"
               />
-              {errors.toDoor && (
+              {errors.phone && (
                 <span className="error">This Option is required</span>
               )}
             </div>
 
             <div className="form-group">
               <input
-                name="road"
+                name="address_line_1"
                 className="form-control"
                 ref={register({ required: true })}
-                defaultValue={road}
-                placeholder="Road No"
+                defaultValue={address_line_1}
+                placeholder="Address line.1"
               />
-              {errors.road && (
-                <span className="error">Road No is required</span>
+              {errors.address_line_1 && (
+                <span className="error">Address line.1 is required</span>
               )}
             </div>
 
             <div className="form-group">
               <input
-                name="flat"
+                name="address_line_2"
                 className="form-control"
                 ref={register({ required: true })}
-                defaultValue={flat}
-                placeholder="Flat, Suite or Floor"
+                defaultValue={address_line_2}
+                placeholder="Address line.2"
               />
-              {errors.flat && (
-                <span className="error">Flat, Suite or Floor is required</span>
+              {errors.address_line_2 && (
+                <span className="error">Address line.2 is required</span>
               )}
             </div>
 
             <div className="form-group">
               <input
-                name="businessName"
+                name="postcode"
                 className="form-control"
                 ref={register({ required: true })}
-                defaultValue={businessName}
-                placeholder="Business name"
+                defaultValue={postcode}
+                placeholder="Postcode"
               />
-              {errors.businessName && (
-                <span className="error">Business name is required</span>
+              {errors.postcode && (
+                <span className="error">Postcode is required</span>
               )}
             </div>
 
             <div className="form-group">
               <textarea
-                name="address"
-                ref={register({ required: true })}
-                defaultValue={address}
-                placeholder="Address"
+                name="comment"
+                ref={register()}
+                defaultValue={comment}
+                placeholder="Comment"
                 className="form-control"
                 cols="30"
                 rows="2"
               ></textarea>
-              {errors.address && (
-                <span className="error">Password is required</span>
+              {errors.comment && (
+                <span className="error">Comment is required</span>
               )}
             </div>
 
@@ -109,14 +132,17 @@ const Shipment = (props) => {
         <div className="offset-md-1 col-md-5">
           <div className="restaurant-info mb-3">
             <h4>
-              From <strong> Mika</strong>
+              From <strong> Fire Spot</strong>
             </h4>
             <h5>Rank：⭐️⭐️⭐️⭐️</h5>
             <h5>107 Rd No 9</h5>
           </div>
 
           {props.cart.map((item) => (
-            <div className="single-checkout-item mb-3 bg-light rounded d-flex align-items-center justify-content-between p-3">
+            <div
+              key={item.id}
+              className="single-checkout-item mb-3 bg-light rounded d-flex align-items-center justify-content-between p-3"
+            >
               <img
                 width="140px"
                 className="moor-images"
@@ -160,7 +186,7 @@ const Shipment = (props) => {
               </div>
             </div>
           ))}
-
+          {/* ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
           {!props.cart.length && (
             <h3 className="py-3">
               No Items Added <a href="/"> Keep Shopping</a>
@@ -189,10 +215,21 @@ const Shipment = (props) => {
             </p>
 
             {totalQuantity ? (
-              toDoor && road && flat && businessName && address ? (
+              phone &&
+              address_line_1 &&
+              address_line_2 &&
+              postcode &&
+              comment ? (
                 <Link to="/order-complete">
                   <button
-                    onClick={() => props.clearCart()}
+                    onClick={() =>
+                      props.clearCart(
+                        auth.user.email,
+                        tax.toFixed(2),
+                        deliveryFee.toFixed(2),
+                        grandTotal.toFixed(2),
+                      )
+                    }
                     className="btn btn-block btn-danger"
                   >
                     Check Out Your Food

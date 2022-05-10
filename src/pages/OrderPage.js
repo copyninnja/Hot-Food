@@ -6,10 +6,17 @@ import { Select } from "antd";
 import "antd/dist/antd.css";
 import { Upload, Button, Modal } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { uploadDiplomaImg, createNotification, uploadDishImg } from "../api";
+import {
+  uploadDiplomaImg,
+  createNotification,
+  uploadDishImg,
+  getCustomerOrderRaw,
+} from "../api";
 import Foods from "../components/Foods/Foods";
 
 const OrderPage = () => {
+  const auth = useAuth();
+  getCustomerOrderRaw(auth.user.email);
   return <></>;
 };
 export default OrderPage;

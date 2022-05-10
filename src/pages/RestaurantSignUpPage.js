@@ -12,14 +12,14 @@ const RestaurantPage = () => {
   const [status, setStatus] = useState(null);
   const [rawData, setRawData] = useState({});
 
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   useEffect(() => {
     if (auth.user) {
       setStatus(auth.user.status);
     }
   }, [auth]);
   const onSubmit = (data) => {
-    data.RestaurantID = auth.user.uid;
+    data.RestaurantEmail = auth.user.email;
     const a = Object.assign(rawData, data);
     createRequest(a);
   };
@@ -49,7 +49,7 @@ const RestaurantPage = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="py-3">
         <div className="form-group">
           <input
-            name="Restaurant Name"
+            name="RestaurantName"
             className="form-control"
             ref={register({ required: true })}
             placeholder="Restaurant Name"

@@ -33,3 +33,13 @@
 .dishButton {
   margin-top: var(--fontsize);
 }
+
+.signUpButton {
+  background-color: var(--danger);
+  color: var(--white);
+  font-family: fangsong;
+  width: 20rem;
+  height: 2.4rem;
+  font-size: 1.2rem;
+  border: none;
+}

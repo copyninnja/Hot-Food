@@ -17,7 +17,7 @@ const FoodDetails = (props) => {
   }, []);
   let history = useHistory();
 
-  const { id } = useParams();
+  const { restaurantId, id } = useParams();
   const currentFood = allFoods.find((food) => food.id === id);
 
   const [quantity, setQuantity] = useState(1);
@@ -30,8 +30,9 @@ const FoodDetails = (props) => {
   }, [currentFood.quantity]);
 
   const finalCartHandler = (currentFood) => {
+    props.restHandler(restaurantId);
     currentFood.quantity = quantity;
-
+    console.log(currentFood);
     props.cartHandler(currentFood);
     setIsSuccess(true);
   };

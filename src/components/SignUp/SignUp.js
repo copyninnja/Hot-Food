@@ -11,7 +11,7 @@ const SignUp = () => {
   const auth = useAuth();
   const [radioValue, setRadioValue] = useState("Customer");
   const onSubmit = (data) => {
-    console.log(data); //TODO 修改 用户类型 data.type
+    console.log(data);
     if (returningUser) {
       if (data.email && data.password) {
         auth.signIn(data.email, data.password, data.type);
