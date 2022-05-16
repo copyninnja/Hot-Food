@@ -20,7 +20,7 @@ import RestaurantSignUpPage from "./pages/RestaurantSignUpPage";
 import RestaurantFoodPage from "./pages/RestaurantFoodPage";
 import Shipment from "./components/Shipment/Shipment";
 import OrderPage from "./pages/OrderPage";
-import { createOrder } from "./api";
+import { createOrder, getRestaurantName } from "./api";
 import restaurants from "./fakeData/restaurants";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,17 +66,18 @@ function App() {
   };
 
   const clearCart = (email, tax, deliveryFee, grandTotal) => {
-    //TODO
     setCart([]);
-    createOrder(
-      cart,
-      email,
-      tax,
-      deliveryFee,
-      grandTotal,
-      deliveryDetails,
-      restWhom,
-    );
+    getRestaurantName(restWhom).then((name) => {
+      createOrder(
+        cart,
+        email,
+        tax,
+        deliveryFee,
+        grandTotal,
+        deliveryDetails,
+        name,
+      );
+    });
   };
 
   return (

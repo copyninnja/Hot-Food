@@ -7,11 +7,7 @@ import App from "./App";
 import "./variables.module.css";
 ReactDOM.render(
   <React.StrictMode>
-    {/* <RestaurantsContextProvider>
-      <AuthProvider> */}
     <App />
-    {/* </AuthProvider>
-    </RestaurantsContextProvider> */}
   </React.StrictMode>,
   document.getElementById("root"),
 );

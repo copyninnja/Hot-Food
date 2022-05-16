@@ -129,6 +129,7 @@ const Shipment = (props) => {
             </div>
           </form>
         </div>
+        {/* ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
         <div className="offset-md-1 col-md-5">
           <div className="restaurant-info mb-3">
             <h4>
@@ -186,7 +187,6 @@ const Shipment = (props) => {
               </div>
             </div>
           ))}
-          {/* ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */}
           {!props.cart.length && (
             <h3 className="py-3">
               No Items Added <a href="/"> Keep Shopping</a>

@@ -10,6 +10,7 @@ import {
   where,
   orderBy,
   onSnapshot,
+  getDoc,
 } from "@firebase/firestore";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
@@ -141,9 +142,17 @@ export const createOrder = async (
   deliveryFee,
   grandTotal,
   address,
-  restaurantID,
+  restaurantName,
 ) => {
-  console.log(cart, email, tax, deliveryFee, grandTotal, address, restaurantID);
+  console.log(
+    cart,
+    email,
+    tax,
+    deliveryFee,
+    grandTotal,
+    address,
+    restaurantName,
+  );
   // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
   await addDoc(orderCollectionRef, {
     orderDetail: cart,
@@ -152,10 +161,20 @@ export const createOrder = async (
     deliveryFee: deliveryFee,
     grandTotal: grandTotal,
     address: address,
-    restaurantID: restaurantID,
+    restaurantName: restaurantName,
     status: "not taken",
     time: Date.now(),
   });
+};
+export const getRestaurantName = async (id) => {
+  const docRef = doc(db, "restaurants", id);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    return docSnap.data().name, docSnap.data().name;
+  } else {
+    console.log("No such document!");
+  }
 };
 export const getCustomerOrderRaw = async (email) => {
   const q = query(
@@ -166,10 +185,9 @@ export const getCustomerOrderRaw = async (email) => {
   const data = await getDocs(q);
   let rawData = [];
   data.forEach((doc) => {
+    // const { grandTotal, orderDetail, address, status, restaurantName} = doc.data();
     rawData.push(doc.data());
   });
   console.log(rawData);
-  // return rawData;
-  // let addressData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-  // return restaurantsData;
+  return rawData;
 };

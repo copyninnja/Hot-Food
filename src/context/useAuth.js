@@ -1,12 +1,11 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import firebaseConfig from "../firebaseconfig";
-import { Route, Redirect, useHistory } from "react-router-dom";
-import { getFirestore } from "@firebase/firestore";
+import { Route, Redirect } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import "firebase/analytics";
 import { createUser, getUserTypeAndStatus } from "../api";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 //***************** Fire base Initialization ************************
 const AuthContext = createContext();
@@ -58,7 +57,6 @@ const getUser = (user) => {
 
 const Auth = () => {
   const [user, setUser] = useState(null);
-  const uid = user ? user.uid : null;
   // const url = firebase.storage().ref().child(`images/${uid}/diploma.jpg`);
   // const usersCollectionRef = collection(db, "users"); //表名
   useEffect(() => {
@@ -70,7 +68,7 @@ const Auth = () => {
           currentUser.type = type === undefined ? "Customer" : type;
           currentUser.status = status;
           setUser(currentUser);
-          window.history.back();
+          // window.history.back();
         };
         fetchData();
       }
@@ -96,12 +94,13 @@ const Auth = () => {
       });
   };
 
-  const signIn = (email, password, type) => {
+  const signIn = (email, password) => {
     return firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
         setUser(result.user);
+        window.history.back();
       })
       .catch((error) => {
         setUser(null);
@@ -140,7 +139,7 @@ const Auth = () => {
     return firebase
       .auth()
       .signOut()
-      .then((result) => {
+      .then(() => {
         setUser(null);
         return true;
       })
