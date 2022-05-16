@@ -191,3 +191,18 @@ export const getCustomerOrderRaw = async (email) => {
   console.log(rawData);
   return rawData;
 };
+
+export const getAddressOrderRaw = async (email) => {
+  const q = query(
+    collection(db, "Address"),
+    where("customerEmail", "==", email),
+  );
+  const data = await getDocs(q);
+  let rawData = [];
+  data.forEach((doc) => {
+    // const { grandTotal, orderDetail, address, status, restaurantName} = doc.data();
+    rawData.push(doc.data());
+  });
+  console.log(rawData);
+  return rawData;
+};

@@ -20,6 +20,7 @@ import RestaurantSignUpPage from "./pages/RestaurantSignUpPage";
 import RestaurantFoodPage from "./pages/RestaurantFoodPage";
 import Shipment from "./components/Shipment/Shipment";
 import OrderPage from "./pages/OrderPage";
+import AddressPage from "./pages/AddressPage";
 import { createOrder, getRestaurantName } from "./api";
 import restaurants from "./fakeData/restaurants";
 function App() {
@@ -51,6 +52,17 @@ function App() {
   });
   const deliveryDetailsHandler = (data) => {
     setDeliveryDetails(data);
+  };
+
+  const [addressDetails, setAddressDetails] = useState({
+    contactName: null,
+    phone: null,
+    address_line_1: null,
+    address_line_2: null,
+    postcode: null,
+  });
+  const addressDetailsHandler = (data) => {
+    setAddressDetails(data);
   };
 
   const checkOutItemHandler = (foodID, foodQuantity) => {
@@ -148,11 +160,16 @@ function App() {
                 <Header cart={cart} />
                 <AddressItem
                   cart={cart}
-                  deliveryDetails={deliveryDetails}
-                  deliveryDetailsHandler={deliveryDetailsHandler}
+                  addressDetails={addressDetails}
+                  addressDetailsHandler={addressDetailsHandler}
                   checkOutItemHandler={checkOutItemHandler}
                   clearCart={clearCart}
                 />
+              </PrivateRoute>
+
+              <PrivateRoute path="/addressManagement" restricted="Customer">
+                <Header cart={cart} />
+                <AddressPage></AddressPage>
               </PrivateRoute>
 
               <PrivateRoute path="/order-complete" restricted="Customer">

@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import "./AddressItem.css";
+import { createAddress, getAddressRaw } from "../../api";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../../context/useAuth";
 import { Link } from "react-router-dom";
 
 const AddressItem = (props) => {
@@ -8,11 +10,20 @@ const AddressItem = (props) => {
     window.scrollTo(0, 0);
   }, []);
 
-  const { postcode, road, flat, contactName, contactNumber, description } =
-    props.deliveryDetails;
+  const auth = useAuth();
+  const {contactName,phone,address_line_1,address_line_2,postcode} =
+    props.addressDetails;
 
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = (data) => props.deliveryDetailsHandler(data);
+  const onSubmit = (data) => {
+    alert(JSON.stringify(data));
+    console.log(data);
+    props.addressDetailsHandler(data);
+    data.customerEmail = auth.user.email;
+    data.time = Date.now();
+    console.log(data);
+    createAddress(data);
+  };
 
   const subTotal = props.cart.reduce((acc, crr) => {
     return acc + crr.price * crr.quantity;
@@ -33,6 +44,7 @@ const AddressItem = (props) => {
           <h4>Add Delivery Address</h4>
           <hr />
           <form onSubmit={handleSubmit(onSubmit)} className="py-5">
+            
             <div className="form-group">
               <input
                 name="postcode"
@@ -48,26 +60,26 @@ const AddressItem = (props) => {
 
             <div className="form-group">
               <input
-                name="road"
+                name="address_line_1"
                 className="form-control"
                 ref={register({ required: true })}
-                defaultValue={road}
+                defaultValue={address_line_1}
                 placeholder="Address Line 1"
               />
-              {errors.road && (
+              {errors.address_line_1 && (
                 <span className="error">Address Line 1 is required</span>
               )}
             </div>
 
             <div className="form-group">
               <input
-                name="flat"
+                name="address_line_2"
                 className="form-control"
                 ref={register({ required: false })}
-                defaultValue={flat}
+                defaultValue={address_line_2}
                 placeholder="Address Line 2"
               />
-              {errors.flat && (
+              {errors.address_line_2 && (
                 <span className="error">Flat, Suite or Floor is required</span>
               )}
             </div>
@@ -87,31 +99,17 @@ const AddressItem = (props) => {
 
             <div className="form-group">
               <input
-                name="contactNumber"
+                name="phone"
                 className="form-control"
                 ref={register({ required: true })}
-                defaultValue={contactNumber}
+                defaultValue={phone}
                 placeholder="Contact Number"
               />
-              {errors.contactNumber && (
+              {errors.phone && (
                 <span className="error">Contact Number is required</span>
               )}
             </div>
 
-            <div className="form-group">
-              <textarea
-                name="Description"
-                ref={register({ required: true })}
-                defaultValue={description}
-                placeholder="Description"
-                className="form-control"
-                cols="30"
-                rows="2"
-              ></textarea>
-              {errors.address && (
-                <span className="error">Password is required</span>
-              )}
-            </div>
 
             <div className="form-group">
               <button className="btn btn-danger btn-block" type="submit">

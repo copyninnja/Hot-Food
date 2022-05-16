@@ -24,7 +24,7 @@ const Header = (props) => {
 
         <ul className="navbar-nav align-items-center">
           <li className="nav-item active">
-            <Link to="/addAddress" className="nav-link">
+            <Link to="/addressManagement" className="nav-link">
               <FontAwesomeIcon icon={faAddressBook} />
             </Link>
           </li>
