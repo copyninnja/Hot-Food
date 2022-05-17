@@ -14,7 +14,8 @@ import {
 } from "@firebase/firestore";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
-import { getStorage, uploadBytes, ref } from "firebase/storage";
+import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { Empty } from "antd";
 
 const init = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(init);
@@ -25,6 +26,7 @@ const requestCollectionRef = collection(db, "adminList");
 const notificationCollectionRef = collection(db, "notifications");
 const addressCollectionRef = collection(db, "Address");
 const orderCollectionRef = collection(db, "Order");
+const foodCollectionRef = collection(db, "FoodItem");
 
 export const uploadDiplomaImg = async (uid, file) => {
   const storageRef = ref(storage, `diploma/${uid}/diploma.jpg`);
@@ -39,10 +41,31 @@ export const uploadRestaurantImg = async (uid, file) => {
   });
 };
 export const uploadDishImg = async (uid, file) => {
-  const storageRef = ref(storage, `dishPhoto/${uid}/photo.jpg`);
+  //const storageRef = ref(storage, `dishPhoto/${uid}/photo.jpg`);
+  //uploadBytes(storageRef, file).then((snapshot) => {
+    
+  //  console.log("Uploaded a blob or file!");
+  //});
+  //alert(JSON.stringify(res));
+  const timeStamp = Date.now();
+  const storageRef = ref(storage, `dishPhoto/${uid}/${timeStamp}.jpg`);
+  const result = await uploadBytes(storageRef, file);
+  const url=await getDownloadURL(storageRef);
+  
+  
+  return url;
+};
+
+export const uploadFoodImg = async (uid, file) => {
+  const timeStamp = Date.now();
+  const storageRef = ref(storage, `dishPhoto/${uid}/${timeStamp}.jpg`);
   uploadBytes(storageRef, file).then((snapshot) => {
     console.log("Uploaded a blob or file!");
   });
+  getDownloadURL(storageRef).then((url) =>{
+    alert(url);
+  })
+  
 };
 
 export const getAllRequestList = async () => {
@@ -120,6 +143,13 @@ export const createAddress = async (data) => {
   // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
   await addDoc(addressCollectionRef, data);
 };
+
+export const createFood = async (data) => {
+  // console.log(data);
+  // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
+  await addDoc(foodCollectionRef, data);
+};
+
 export const getAddressRaw = async (email) => {
   const q = query(
     collection(db, "Address"),
