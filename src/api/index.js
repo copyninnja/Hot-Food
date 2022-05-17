@@ -29,43 +29,51 @@ const orderCollectionRef = collection(db, "Order");
 const foodCollectionRef = collection(db, "FoodItem");
 
 export const uploadDiplomaImg = async (now, file) => {
-  const storageRef = ref(storage, `diploma/${now}/diploma.jpg`);
-  uploadBytes(storageRef, file).then((snapshot) => {
-    console.log("Uploaded a blob or file!");
-  });
+  if (file.status == "done") {
+    console.log(file);
+    const storageRef = ref(storage, `diploma/${now}/diploma.jpg`);
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    uploadBytes(storageRef, file.originFileObj, metadata).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+    });
+  }
 };
 export const uploadRestaurantImg = async (now, file) => {
-  const storageRef = ref(storage, `restaurantPhoto/${now}/photo.jpg`);
-  uploadBytes(storageRef, file).then((snapshot) => {
-    console.log("Uploaded a blob or file!");
-  });
+  if (file.status == "done") {
+    const storageRef = ref(storage, `restaurantPhoto/${now}/photo.jpg`);
+    uploadBytes(storageRef, file).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+    });
+  }
 };
 export const uploadDishImg = async (uid, file) => {
   //const storageRef = ref(storage, `dishPhoto/${uid}/photo.jpg`);
   //uploadBytes(storageRef, file).then((snapshot) => {
-    
+
   //  console.log("Uploaded a blob or file!");
   //});
   //alert(JSON.stringify(res));
-  const timeStamp = Date.now();
-  const storageRef = ref(storage, `dishPhoto/${uid}/${timeStamp}.jpg`);
-  const result = await uploadBytes(storageRef, file);
-  const url=await getDownloadURL(storageRef);
-  
-  
-  return url;
+  if (file.status == "done") {
+    const timeStamp = Date.now();
+    const storageRef = ref(storage, `dishPhoto/${uid}/${timeStamp}.jpg`);
+    const result = await uploadBytes(storageRef, file.originFileObj);
+    const url = await getDownloadURL(storageRef);
+
+    return url;
+  }
 };
 
 export const uploadFoodImg = async (uid, file) => {
   const timeStamp = Date.now();
   const storageRef = ref(storage, `dishPhoto/${uid}/${timeStamp}.jpg`);
-  uploadBytes(storageRef, file).then((snapshot) => {
+  uploadBytes(storageRef, file.originFileObj).then((snapshot) => {
     console.log("Uploaded a blob or file!");
   });
-  getDownloadURL(storageRef).then((url) =>{
+  getDownloadURL(storageRef).then((url) => {
     alert(url);
-  })
-  
+  });
 };
 
 export const getAllRequestList = async () => {
@@ -126,6 +134,7 @@ export const updateUser = async (id, age) => {
 };
 export const createRequest = async (data) => {
   data.status = "Not verified";
+  data.comment = null;
   data.time = Date.now();
   // {category: 'Burgers', price: '2', Restaurant Name: '1', description: '2', place: '3'}
   await addDoc(requestCollectionRef, data);

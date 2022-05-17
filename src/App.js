@@ -27,7 +27,7 @@ import { useHistory } from "react-router-dom";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
-  const [restWhom, setRestWhom] = useState();
+  const [restWhom, setRestWhom] = useState(null);
   const cartHandler = (currentFood) => {
     const alreadyAdded = cart.find((item) => item.id === currentFood.id);
 
@@ -40,8 +40,15 @@ function App() {
     }
   };
   const restHandler = (restID) => {
-    console.log(restWhom);
-    restWhom ? setCart([]) : setRestWhom(restID);
+    console.log(restID, restWhom);
+    if (restWhom == restID) {
+      console.log(restID, restWhom);
+    } else if (restWhom == null) {
+      setRestWhom(restID);
+    } else {
+      setCart([]);
+      window.location.reload();
+    }
   };
 
   const [deliveryDetails, setDeliveryDetails] = useState({
