@@ -15,7 +15,6 @@ import {
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { Empty } from "antd";
 
 const init = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(init);
