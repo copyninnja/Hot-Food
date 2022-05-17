@@ -17,6 +17,7 @@ const Contentcard = (props) => {
   const [message, setMessage] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [showButton, setShowButton] = useState("");
+  const [showProgress, setShowProgress] = useState(false);
   //request button:
   const rejectRequest = () => {
     console.log("msg", message);
@@ -27,25 +28,27 @@ const Contentcard = (props) => {
       });
     } else {
       const status = "Rejected";
+      setShowProgress(!showProgress);
       updateRequest(props.contentId, status, message).then(
         //window.location.reload(),
         console.log("xxx"),
         setRefresh(!refresh),
-        setShowButton(!showButton),
+        setShowProgress(false),
+        //setShowButton(!showButton),
       );
     }
   };
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
-    console.log(e.target.value);
+    //console.log(e.target.value);
   };
 
   useEffect(() => {
     getRequestContent(props.contentId).then((res) => {
-      console.log(res);
+      console.log("res", res);
       setcontentData(res);
-      setShowButton(res.status);
+      setShowButton(res[0].status);
     });
     console.log("xxx");
   }, [props.contentId, refresh]);
@@ -86,12 +89,12 @@ const Contentcard = (props) => {
                   {item.place}
                 </Descriptions.Item>
                 <Descriptions.Item label="FBR_LICENSE">
-                  <Image width={200} src="" />
+                  <Image width={200} src={item.imgUrl} />
                 </Descriptions.Item>
               </Descriptions>
               <br />
               <br />
-              {showButton === "Not Verified" ? (
+              {showButton === "Not verified" ? (
                 <div>
                   <TextArea
                     rows={4}
@@ -113,6 +116,13 @@ const Contentcard = (props) => {
                 </div>
               ) : (
                 <div></div>
+              )}
+              {showProgress ? (
+                <div className="example">
+                  <Spin />
+                </div>
+              ) : (
+                <></>
               )}
             </div>
           );

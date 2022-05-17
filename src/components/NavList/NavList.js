@@ -29,7 +29,7 @@ const NavList = () => {
     } else if (e.key === "Sign Out") {
       //console.log("!!!!!!!!!!!!");
       auth.signOut();
-      window.history.push("/");
+      window.history.back();
     }
   };
 
