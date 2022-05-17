@@ -337,3 +337,10 @@ export const updateOrderCanceled = async (uid) => {
   });
   window.location.reload();
 };
+//after approving,change the status of restaurant
+export const updateRetaurantStatus = async (uid) => {
+  // console.log("email",email)
+  const docRef = doc(db, "users", uid);
+  const newFields = { status: "verified" };
+  await updateDoc(docRef, newFields);
+};
