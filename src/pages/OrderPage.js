@@ -11,16 +11,22 @@ import {
   createNotification,
   uploadDishImg,
   getCustomerOrderRaw,
+  getRestaurantOrderRaw,
   getRestaurantName,
+  updateOrderDelivering,
+  updateOrderDelivered,
+  updateOrderCanceled,
 } from "../api";
 import Foods from "../components/Foods/Foods";
 import { RestaurantsContext } from "../context/RestaurantsContext";
 import { dateFormat } from "../helpers/dateFormat";
+import OrderComplete from "../components/OrderComplete/OrderComplete";
 const OrderPage = () => {
   const auth = useAuth();
   const [listState, setListState] = useState({
     initLoading: true,
     loading: false,
+    type: null,
     list: [],
   });
   const [detail, setDetail] = useState({
@@ -31,6 +37,10 @@ const OrderPage = () => {
     address: null,
     restaurantName: null,
     orderDetail: null,
+    customerEmail: null,
+    time: null,
+    uid: null,
+    driver: null,
   });
   const onShowDetail = (data) => {
     console.log(data);
@@ -42,17 +52,48 @@ const OrderPage = () => {
       address: data.address,
       restaurantName: data.restaurantName,
       orderDetail: data.orderDetail,
+      status: data.status,
+      customerEmail: data.customerEmail,
+      time: data.time,
+      uid: data.uid,
+      driver: data.driver,
     });
   };
-  const onLoadMore = () => {};
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    getCustomerOrderRaw(auth.user.email).then((data) => {
-      setListState({ initLoading: false, list: data });
-    });
+    if (auth.user.type == "Customer") {
+      getCustomerOrderRaw(auth.user.email).then((data) => {
+        setListState({ initLoading: false, list: data, type: "Customer" });
+      });
+    } else if (auth.user.type == "Restaurant") {
+      getRestaurantOrderRaw(auth.user.displayName).then((data) => {
+        setListState({ initLoading: false, list: data, type: "Restaurant" });
+      });
+    }
   }, []);
-  const { initLoading, loading, list } = listState;
+  const { initLoading, loading, list, type } = listState;
+
+  const [rawData, setRawData] = useState({});
+  const { Option } = Select;
+  function handleCategoryChange(value) {
+    setRawData(value);
+  }
+  const assignDelivery = (uid) => {
+    updateOrderDelivering({
+      driver: rawData,
+      uid: uid,
+    });
+  };
+  const onDelivered = (data) => {
+    updateOrderDelivered(data.uid);
+  };
+  const onCancel = (data) => {
+    // updateOrderDelivered(data.uid);
+    updateOrderCanceled(data.uid);
+  };
+
+  const onLoadMore = () => {};
 
   const loadMore =
     !initLoading && !loading ? (
@@ -81,19 +122,54 @@ const OrderPage = () => {
             dataSource={list}
             renderItem={(item) => (
               <List.Item
-                actions={[
-                  <a key="list-loadmore-edit">Delivered</a>,
-                  <a
-                    onClick={() => onShowDetail(item)}
-                    key="list-loadmore-more"
-                  >
-                    more
-                  </a>,
-                ]}
+                actions={
+                  type == "Customer" && item.status == "delivering"
+                    ? [
+                        <a
+                          key="list-loadmore-edit"
+                          onClick={() => onDelivered(item)}
+                        >
+                          Delivered
+                        </a>,
+                        <a
+                          onClick={() => onShowDetail(item)}
+                          key="list-loadmore-more"
+                        >
+                          More
+                        </a>,
+                      ]
+                    : item.status == "not taken"
+                    ? [
+                        <a
+                          key="list-loadmore-edit"
+                          onClick={() => onCancel(item)}
+                        >
+                          Cancel
+                        </a>,
+                        <a
+                          onClick={() => onShowDetail(item)}
+                          key="list-loadmore-more"
+                        >
+                          More
+                        </a>,
+                      ]
+                    : [
+                        <a
+                          onClick={() => onShowDetail(item)}
+                          key="list-loadmore-more"
+                        >
+                          More
+                        </a>,
+                      ]
+                }
               >
                 <Skeleton title={false} loading={item.loading} active>
                   <List.Item.Meta
-                    title={item.restaurantName}
+                    title={
+                      type == "Customer"
+                        ? item.restaurantName
+                        : item.customerEmail
+                    }
                     description={
                       "" + dateFormat(new Date(item.time), "default")
                     }
@@ -111,7 +187,12 @@ const OrderPage = () => {
           <div className="offset-md-1 col-md-5">
             <div className="restaurant-info mb-3">
               <h4 className="titile">
-                From <strong> {detail.restaurantName}</strong>
+                From
+                {type == "Customer" ? (
+                  <strong> {detail.restaurantName}</strong>
+                ) : (
+                  <strong> {detail.customerEmail}</strong>
+                )}
               </h4>
               {detail.orderDetail.map((item) => (
                 <div
@@ -128,40 +209,55 @@ const OrderPage = () => {
                     <h6>{item.name}</h6>
                     <h4 className="text-danger">${item.price.toFixed(2)}</h4>
                     <p>
-                      <small>Delivery free</small>
+                      <small>Delivery description: {item.description}</small>
                     </p>
                   </div>
 
                   <div className="checkout-item-button ml-3 btn">
-                    <button
-                      // onClick={() =>
-                      //   props.checkOutItemHandler(item.id, item.quantity + 1)
-                      // }
-                      className="btn font-weight-bolder"
-                    >
-                      +
-                    </button>
-
                     <button className="btn bg-white rounded">
                       {item.quantity}
                     </button>
-
-                    {item.quantity > 0 ? (
-                      <button
-                        // onClick={() =>
-                        //   props.checkOutItemHandler(item.id, item.quantity - 1)
-                        // }
-                        className="btn font-weight-bolder"
-                      >
-                        -
-                      </button>
-                    ) : (
-                      <button className="btn font-weight-bolder">-</button>
-                    )}
                   </div>
                 </div>
               ))}
             </div>
+            {detail.status == "delivering" ? (
+              <OrderComplete
+                address={detail.address}
+                restaurant={detail.restaurantName}
+                rider={detail.driver}
+              />
+            ) : (
+              <></>
+            )}
+            {detail.status == "not taken" && type == "Restaurant" ? (
+              <div className="form-group">
+                <Select
+                  placeholder="Assign Driver"
+                  style={{ width: 200 }}
+                  onChange={handleCategoryChange}
+                  id="1"
+                >
+                  <Option value="Abdoulaye Sekhar">Abdoulaye Sekhar</Option>
+                  <Option value="Lanre Chand">Lanre Chand</Option>
+                  <Option value="Popeye Mariamne">Popeye Mariamne</Option>
+                  <Option value="Pikachu Murron">Pikachu Murron</Option>
+                  <Option value="Florian Gordian">Florian Gordian</Option>
+                </Select>
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="large"
+                  className="assignButton"
+                  onClick={() => assignDelivery(detail.uid)}
+                >
+                  {" "}
+                  Assign order
+                </Button>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         ) : (
           <></>
