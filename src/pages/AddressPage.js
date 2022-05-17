@@ -17,6 +17,7 @@ import {
 import Foods from "../components/Foods/Foods";
 import { RestaurantsContext } from "../context/RestaurantsContext";
 import { dateFormat } from "../helpers/dateFormat";
+import { getAddressList } from "../api/AddressApi";
 const AddressPage = () => {
   const auth = useAuth();
   const [listState, setListState] = useState({
@@ -49,9 +50,9 @@ const AddressPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // getAddressOrderRaw(auth.user.email).then((data) => {
-    //   setListState({ initLoading: false, list: data });
-    // });
+     getAddressList(auth.user.email).then((data) => {
+       setListState({ initLoading: false, list: data });
+     });
   }, []);
   const { initLoading, loading, list } = listState;
 
