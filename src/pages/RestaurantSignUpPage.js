@@ -6,7 +6,12 @@ import { Select } from "antd";
 import "antd/dist/antd.css";
 import { Upload, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { uploadDiplomaImg, createRequest, uploadRestaurantImg } from "../api";
+import {
+  uploadDiplomaImg,
+  createRequest,
+  uploadRestaurantImg,
+  getUserUID,
+} from "../api";
 const RestaurantPage = () => {
   const auth = useAuth();
   const [status, setStatus] = useState(null);
@@ -22,7 +27,11 @@ const RestaurantPage = () => {
   const onSubmit = (data) => {
     data.RestaurantEmail = auth.user.email;
     const a = Object.assign(rawData, data);
-    createRequest(a);
+    getUserUID(auth.user.email).then((data) => {
+      console.log(data);
+      a.uid = data;
+      createRequest(a);
+    });
   };
   const diplomaUpload = (data) => {
     const now = Date.now();

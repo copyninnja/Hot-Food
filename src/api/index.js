@@ -161,6 +161,15 @@ export const getUserTypeAndStatus = async (email) => {
   });
   return { type, status };
 };
+export const getUserUID = async (email) => {
+  const q = query(usersCollectionRef, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  let id;
+  querySnapshot.forEach((doc) => {
+    id = doc.id;
+  });
+  return id;
+};
 export const deleteUser = async (id) => {
   const userDoc = doc(db, "users", id);
   await deleteDoc(userDoc);
@@ -327,4 +336,12 @@ export const updateOrderCanceled = async (uid) => {
     status: "canceled",
   });
   window.location.reload();
+};
+
+//after approving,change the status of restaurant
+export const updateRetaurantStatus = async (uid) => {
+  // console.log("email",email)
+  const docRef = doc(db, "users", uid);
+  const newFields = { status: "verified" };
+  await updateDoc(docRef, newFields);
 };
