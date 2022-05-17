@@ -6,6 +6,7 @@ import "antd/dist/antd.css";
 import { Upload, Button, Modal } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { createNotification, uploadDishImg, createFood} from "../../api";
+import {updateFoodItem} from "../../api/FoodItemApi";
 
 import Foods from "../Foods/Foods";
 
@@ -14,24 +15,23 @@ const CreateOrUpdateDishItem = (props) => {
   const [modalState, setModalState] = useState(false);
   const [downLoadUrl, setDownLoadUrl] = useState();
   const [modityType, setModityType] = useState();
+  const [buttonDisplay, setButtonDisplay] = useState();
   const auth = useAuth();
   const { id, foodName, foodDescription, foodPrice, photoUrl} = props.food;
   useEffect(() => {
 	if(id!=null){
-        setModityType("update a foodItem");
+        setButtonDisplay("update a foodItem");
+        setModityType("update");
     }else{
-        setModityType("create a foodItem")
+        setButtonDisplay("create a foodItem");
+        setModityType("create")
     }
+    
   }, []);
 
   const setModalVisible = () => {
     setModalState(!modalState);
-    alert(id);
-    if(id!=null){
-        setModityType("update a foodItem");
-    }else{
-        setModityType("create a foodItem")
-    }
+    
   };
 
   
@@ -51,7 +51,14 @@ const CreateOrUpdateDishItem = (props) => {
     alert(JSON.stringify(data));
     
     createNotification(data);
-    createFood(data);
+    
+    if(modityType === "update"){
+        alert(JSON.stringify(data));
+        updateFoodItem(id,data);
+    }
+    if(modityType === "create"){
+        createFood(data);
+    }
     // data.RestaurantID = auth.user.uid;
     // const a = Object.assign(rawData, data);
     // createRequest(a);
@@ -66,7 +73,7 @@ const CreateOrUpdateDishItem = (props) => {
         className="dishButton"
         onClick={() => setModalVisible()}
       >
-        {modityType}
+        {buttonDisplay}
       </Button>
       <Modal
         title="create a new dish"
@@ -90,6 +97,7 @@ const CreateOrUpdateDishItem = (props) => {
           />
           <input
             name="foodDescription"
+            defaultValue={foodDescription}
             className="form-control dishButton"
             ref={register()}
             placeholder="Food Description"
@@ -97,6 +105,7 @@ const CreateOrUpdateDishItem = (props) => {
           <input
             name="foodPrice"
             className="form-control dishButton"
+            defaultValue={foodPrice}
             ref={register()}
             placeholder="Food Price £"
           />

@@ -25,12 +25,13 @@ const Foods = (props) => {
   useEffect(async() => {
 	const fooditemList = await getFooditemList(auth.user.uid);
 	alert(JSON.stringify(fooditemList));
-    setFoods(fooditemList);
+    setFoods(allFoods);
   }, []);
 
   // const selectedFoods = foods.filter((food) => food.category === selectedFoodType);
   const selectedFastFoods = foods.filter(
-    (food) => food.restaurantID === auth.user.uid,
+    //(food) => food.restaurantID === auth.user.uid,
+	(food) => food.category === selectedFastFoodType,
   );
 
   return (
