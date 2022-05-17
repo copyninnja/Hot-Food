@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getAllRequestList } from "../../api";
 import {deleteFoodItem} from "../../api/FoodItemApi";
+import CreateOrUpdateDishItem from "../CreateOrUpdateDishItem/CreateOrUpdateDishItem";
 
 const FoodItem = (props) => {
   // const { id, name, description, price, img } = props.food;
@@ -32,6 +33,8 @@ const FoodItem = (props) => {
     alert("delete successful");
   };
 
+  
+
   return (
     <div className="col-md-4 mb-4">
       
@@ -48,6 +51,9 @@ const FoodItem = (props) => {
                 Delete
               </button>
             </div>
+            <CreateOrUpdateDishItem food={props.food}>
+            
+            </CreateOrUpdateDishItem>
         </div>
      
     </div>
