@@ -2,21 +2,39 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const FoodItem = (props) => {
-  const { id, name, description, price, img } = props.food;
+  // const { id, name, description, price, img } = props.food;
+
+  // return (
+  //   <div className="col-md-4 mb-4">
+  //     <Link to={"food/" + id}>
+  //       <div className="card text-center">
+  //         <img src={img} alt="FoodItem" className="card-img-top" />
+
+  //         <div className="card-body">
+  //           <h5>{name}</h5>
+  //           <p>{description}</p>
+  //           <h4>£{price.toFixed(2)}</h4>
+  //         </div>
+  //       </div>
+  //     </Link>
+  //   </div>
+  // );
+  const { id, foodName, foodDescription, foodPrice, photoUrl} = props.food;
+  alert(JSON.stringify(props.food));
 
   return (
     <div className="col-md-4 mb-4">
-      <Link to={"food/" + id}>
+      
         <div className="card text-center">
-          <img src={img} alt="FoodItem" className="card-img-top" />
+          <img src={photoUrl} alt="FoodItem" className="card-img-top" />
 
           <div className="card-body">
-            <h5>{name}</h5>
-            <p>{description}</p>
-            <h4>£{price.toFixed(2)}</h4>
+            <h5>{foodName}</h5>
+            <p>{foodDescription}</p>
+            <h4>£{foodPrice}</h4>
           </div>
         </div>
-      </Link>
+     
     </div>
   );
 };
