@@ -341,6 +341,7 @@ export const updateOrderCanceled = async (uid) => {
 //after approving,change the status of restaurant
 export const updateRetaurantStatus = async (uid) => {
   // console.log("email",email)
+  console.log("o-uid", uid);
   const docRef = doc(db, "users", uid);
   const newFields = { status: "verified" };
   await updateDoc(docRef, newFields);

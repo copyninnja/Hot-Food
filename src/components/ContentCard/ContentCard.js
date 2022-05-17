@@ -45,8 +45,7 @@ const Contentcard = (props) => {
       setRefresh(!refresh),
       setShowProgress(false),
     );
-
-    updateRetaurantStatus(uid).then(console.log("account is approved"));
+    //updateRetaurantStatus(uid).then(console.log("account is approved"));
   };
 
   const handleCancel = () => {
@@ -85,6 +84,7 @@ const Contentcard = (props) => {
       console.log("res", res);
       setcontentData(res);
       setShowButton(res[0].status);
+      console.log(res[0].uid);
       setUid(res[0].uid);
     });
     console.log("xxx");

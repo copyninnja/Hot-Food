@@ -6,6 +6,7 @@ import { Layout, Menu } from "antd";
 import RequestDetail from "../RequestDetail/RequestDetail";
 //import { render } from "@testing-library/react";
 import { useAuth } from "../../context/useAuth";
+import Logo from "../../images/logo2.png";
 const { Header, Sider } = Layout;
 const items1 = ["Sign-up Request", "Done", "Sign Out"].map((key) => ({
   key,
@@ -42,7 +43,9 @@ const NavList = () => {
   return (
     <Layout>
       <Header className="header">
-        <div className="logo" />
+        <div className="logo">
+          <img src={Logo} alt="web6251 logo" />
+        </div>
         <Menu
           theme="dark"
           mode="horizontal"
