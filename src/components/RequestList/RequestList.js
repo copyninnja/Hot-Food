@@ -2,51 +2,37 @@ import React, { useState, useEffect,useRef } from 'react';
 import 'antd/dist/antd.css';
 import { List, message, Avatar, Skeleton, Divider } from 'antd';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { getAllRequestList,getDoneRequestList } from '../../api';
-const InfiniteListExample = (select) => {
+import { getRequestList } from '../../api';
+const InfiniteListExample = (props) => {
   //console.log("begin",select.select)
- 
+  const {setSelectListItem} = props;
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   //return different list based on select
 
   const loadMoreData = () => {
     if (loading) {
-      console.log("loading..");
-      //return;
+      //console.log("loading..");
+      return;
     }
     setLoading(true);
-    
-    if(select.select === 1){
-      //getAllRequestList()
-      console.log("here")
-      getAllRequestList().then(res=> {
-                   console.log("res",res)
-                   setData(res)
-                   setLoading(false) 
-                   console.log("data",data)
-              })
-             .catch(()=>{
-               setLoading(false)
-             })
-    }else{
-      const doneList = getDoneRequestList()
-      doneList.then(res=> console.log(res))
+    getRequestList(props).then(res=> setData(res))
               .then(()=>{
                 setLoading(false)
               })
              .catch(()=>{
                setLoading(false)
              })
-      }
-    
-  };
+    }
+  
+  const SelectListItem =(data)=>{
+      props.setSelectListItem(data)
+  }
 
   useEffect(() => {
     loadMoreData();
-    console.log("select","111")
-  }, [select]);
-
+    console.log("select",props.select)
+  }, [props.select]);
 
   return (
     <div
@@ -69,9 +55,9 @@ const InfiniteListExample = (select) => {
         <List
           dataSource={data}
           renderItem={item => (
-            <List.Item key={item.id}>
+            <List.Item key={item.id} onClick={()=>SelectListItem(item.id)}>
               <List.Item.Meta
-                title={<a href="https://ant.design">{item.RestaurantName}</a>}
+                title={item.RestaurantName}
                 description={item.RestaurantEmail}
               />
               <div>{item.status}</div>

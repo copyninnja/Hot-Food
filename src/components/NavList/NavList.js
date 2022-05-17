@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./NavList.css";
 import InfiniteListExample from "../RequestList/RequestList";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout, Menu } from "antd";
 import RequestDetail from "../RequestDetail/RequestDetail";
-import { render } from "@testing-library/react";
+//import { render } from "@testing-library/react";
 import { useAuth } from "../../context/useAuth";
 const { Header, Sider } = Layout;
 const items1 = ["Sign-up Request", "Done", "Sign Out"].map((key) => ({
@@ -16,6 +16,7 @@ const NavList = () => {
   const auth = useAuth();
 
   const [selectItem, setselectItem] = useState(1);
+  const [Id, setId] = useState("");
   //set click event for menu item:
   const onclick = (e) => {
     //console.log('click',e)
@@ -26,11 +27,18 @@ const NavList = () => {
       //console.log("2")
       setselectItem(2);
     } else if (e.key === "Sign Out") {
-      console.log("!!!!!!!!!!!!");
+      //console.log("!!!!!!!!!!!!");
       auth.signOut();
       window.history.push("/");
     }
   };
+
+  const setSelectListItem = (data) => {
+    console.log("setSelectListItem", data);
+    setId(data);
+    console.log("setid", Id);
+  };
+
   return (
     <Layout>
       <Header className="header">
@@ -46,9 +54,12 @@ const NavList = () => {
       </Header>
       <Layout>
         <Sider width="25%" className="site-layout-background">
-          <InfiniteListExample select={selectItem} />
+          <InfiniteListExample
+            select={selectItem}
+            setSelectListItem={setSelectListItem}
+          />
         </Sider>
-        <RequestDetail />
+        {Id ? <RequestDetail ID={Id} /> : <></>}
       </Layout>
     </Layout>
   );
