@@ -8,7 +8,7 @@ import { Button } from "antd";
 import { Alert } from "antd";
 import { Modal } from "antd";
 import { Spin } from "antd";
-import { getRequestContent } from "../../api";
+import { getRequestContent, updateRetaurantStatus } from "../../api";
 import { updateRequest } from "../../api";
 const { TextArea } = Input;
 
@@ -18,6 +18,42 @@ const Contentcard = (props) => {
   const [refresh, setRefresh] = useState(false);
   const [showButton, setShowButton] = useState("");
   const [showProgress, setShowProgress] = useState(false);
+  const [uid, setUid] = useState("");
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [modalText, setModalText] = useState(
+    "Are you sure you want to approve this request?",
+  );
+
+  const showModal = () => {
+    setVisible(true);
+  };
+
+  const handleOk = () => {
+    setModalText("The modal will be closed after two seconds");
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setVisible(false);
+      setConfirmLoading(false);
+    }, 2000);
+    //
+    const status = "Approved";
+    const message = "This request has been approved";
+    updateRequest(props.contentId, status, message).then(
+      //window.location.reload(),
+      console.log("xxx"),
+      setRefresh(!refresh),
+      setShowProgress(false),
+    );
+
+    updateRetaurantStatus(uid).then(console.log("account is approved"));
+  };
+
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setVisible(false);
+  };
+
   //request button:
   const rejectRequest = () => {
     console.log("msg", message);
@@ -49,6 +85,7 @@ const Contentcard = (props) => {
       console.log("res", res);
       setcontentData(res);
       setShowButton(res[0].status);
+      setUid(res[0].uid);
     });
     console.log("xxx");
   }, [props.contentId, refresh]);
@@ -112,7 +149,18 @@ const Contentcard = (props) => {
                   >
                     Reject
                   </Button>
-                  <Button type="primary">Approve</Button>
+                  <Button type="primary" onClick={showModal}>
+                    Approve
+                  </Button>
+                  <Modal
+                    title="Approve request"
+                    visible={visible}
+                    onOk={handleOk}
+                    confirmLoading={confirmLoading}
+                    onCancel={handleCancel}
+                  >
+                    <p>{modalText}</p>
+                  </Modal>
                 </div>
               ) : (
                 <div></div>
