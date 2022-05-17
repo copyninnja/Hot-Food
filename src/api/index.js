@@ -161,6 +161,15 @@ export const getUserTypeAndStatus = async (email) => {
   });
   return { type, status };
 };
+export const getUserUID = async (email) => {
+  const q = query(usersCollectionRef, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  let id;
+  querySnapshot.forEach((doc) => {
+    id = doc.id;
+  });
+  return id;
+};
 export const deleteUser = async (id) => {
   const userDoc = doc(db, "users", id);
   await deleteDoc(userDoc);
