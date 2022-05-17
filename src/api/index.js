@@ -13,14 +13,8 @@ import {
 } from "@firebase/firestore";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
-import {
-  getStorage,
-  uploadBytes,
-  ref,
-  getDownloadURL,
-  getBytes,
-} from "firebase/storage";
-import { dateFormat } from "../helpers/dateFormat";
+import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { Empty } from "antd";
 
 const init = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(init);
@@ -31,23 +25,53 @@ const requestCollectionRef = collection(db, "adminList");
 const notificationCollectionRef = collection(db, "notifications");
 const addressCollectionRef = collection(db, "Address");
 const orderCollectionRef = collection(db, "Order");
+const foodCollectionRef = collection(db, "FoodItem");
 
-export const uploadDiplomaImg = async (uid, file) => {
-  const storageRef = ref(storage, `diploma/${uid}/diploma.jpg`);
-  uploadBytes(storageRef, file).then((snapshot) => {
-    console.log("Uploaded a blob or file!");
-  });
+export const uploadDiplomaImg = async (now, file) => {
+  if (file.status == "done") {
+    console.log(file);
+    const storageRef = ref(storage, `diploma/${now}/diploma.jpg`);
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+    uploadBytes(storageRef, file.originFileObj, metadata).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+    });
+  }
 };
-export const uploadRestaurantImg = async (uid, file) => {
-  const storageRef = ref(storage, `restaurantPhoto/${uid}/photo.jpg`);
-  uploadBytes(storageRef, file).then((snapshot) => {
-    console.log("Uploaded a blob or file!");
-  });
+export const uploadRestaurantImg = async (now, file) => {
+  if (file.status == "done") {
+    const storageRef = ref(storage, `restaurantPhoto/${now}/photo.jpg`);
+    uploadBytes(storageRef, file).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+    });
+  }
 };
 export const uploadDishImg = async (uid, file) => {
-  const storageRef = ref(storage, `dishPhoto/${uid}/photo.jpg`);
-  uploadBytes(storageRef, file).then((snapshot) => {
+  //const storageRef = ref(storage, `dishPhoto/${uid}/photo.jpg`);
+  //uploadBytes(storageRef, file).then((snapshot) => {
+
+  //  console.log("Uploaded a blob or file!");
+  //});
+  //alert(JSON.stringify(res));
+  if (file.status == "done") {
+    const timeStamp = Date.now();
+    const storageRef = ref(storage, `dishPhoto/${uid}/${timeStamp}.jpg`);
+    const result = await uploadBytes(storageRef, file.originFileObj);
+    const url = await getDownloadURL(storageRef);
+
+    return url;
+  }
+};
+
+export const uploadFoodImg = async (uid, file) => {
+  const timeStamp = Date.now();
+  const storageRef = ref(storage, `dishPhoto/${uid}/${timeStamp}.jpg`);
+  uploadBytes(storageRef, file.originFileObj).then((snapshot) => {
     console.log("Uploaded a blob or file!");
+  });
+  getDownloadURL(storageRef).then((url) => {
+    alert(url);
   });
 };
 
@@ -160,6 +184,7 @@ export const updateRequest = async (id, newStatus, message) => {
 
 export const createRequest = async (data) => {
   data.status = "Not verified";
+  data.comment = null;
   data.time = Date.now();
   // {category: 'Burgers', price: '2', Restaurant Name: '1', description: '2', place: '3'}
   await addDoc(requestCollectionRef, data);
@@ -177,6 +202,13 @@ export const createAddress = async (data) => {
   // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
   await addDoc(addressCollectionRef, data);
 };
+
+export const createFood = async (data) => {
+  // console.log(data);
+  // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
+  await addDoc(foodCollectionRef, data);
+};
+
 export const getAddressRaw = async (email) => {
   const q = query(
     collection(db, "Address"),
@@ -243,8 +275,55 @@ export const getCustomerOrderRaw = async (email) => {
   let rawData = [];
   data.forEach((doc) => {
     // const { grandTotal, orderDetail, address, status, restaurantName} = doc.data();
-    rawData.push(doc.data());
+    let tmp = doc.data();
+    tmp.uid = doc.id;
+    rawData.push(tmp);
   });
   console.log(rawData);
   return rawData;
+};
+export const getRestaurantOrderRaw = async (name) => {
+  const q = query(
+    collection(db, "Order"),
+    where("restaurantName", "==", name),
+    orderBy("time", "desc"),
+  );
+  const data = await getDocs(q);
+  let rawData = [];
+  data.forEach((doc) => {
+    // const { grandTotal, orderDetail, address, status, restaurantName} = doc.data();
+    let tmp = doc.data();
+    tmp.uid = doc.id;
+    rawData.push(tmp);
+  });
+  console.log(rawData);
+  return rawData;
+};
+export const updateOrderDelivering = async ({ driver, uid }) => {
+  console.log({ driver, uid });
+  const orderCollectionRef1 = doc(db, "Order", uid);
+  await updateDoc(orderCollectionRef1, {
+    driver: driver,
+    status: "delivering",
+  });
+  window.location.reload();
+
+  // const newFields = { driver: driver, status: "delivering" };
+  // await updateDoc(userDoc, newFields);
+};
+export const updateOrderDelivered = async (uid) => {
+  console.log(uid);
+  const orderCollectionRef1 = doc(db, "Order", uid);
+  await updateDoc(orderCollectionRef1, {
+    status: "delivered",
+  });
+  window.location.reload();
+};
+export const updateOrderCanceled = async (uid) => {
+  console.log(uid);
+  const orderCollectionRef1 = doc(db, "Order", uid);
+  await updateDoc(orderCollectionRef1, {
+    status: "canceled",
+  });
+  window.location.reload();
 };

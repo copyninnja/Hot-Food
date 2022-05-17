@@ -25,8 +25,13 @@
     "react-infinite-scroll-component": "^6.1.0"
   },
   "scripts": {
+<<<<<<< HEAD
     "build": "react-scripts  build --openssl-legacy-provider",
     "start": "react-scripts  start --openssl-legacy-provider ",
+=======
+    "build": "react-scripts --openssl-legacy-provider build ",
+    "start": "react-scripts start --openssl-legacy-provider",
+>>>>>>> da2d548e31a72bba2a3bf17588330f0d259fbc78
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
