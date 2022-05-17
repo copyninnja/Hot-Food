@@ -22,7 +22,6 @@ const CustomerMenu = () => {
   useEffect(() => {
     if (auth.user) {
       if (auth.user.type === "Restaurant") {
-        console.log(auth.user);
         auth.user.status == "Not verified"
           ? history.push("/RestaurantSignUp")
           : history.push("/Restaurant");

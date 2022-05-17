@@ -26,14 +26,14 @@ const notificationCollectionRef = collection(db, "notifications");
 const addressCollectionRef = collection(db, "Address");
 const orderCollectionRef = collection(db, "Order");
 
-export const uploadDiplomaImg = async (uid, file) => {
-  const storageRef = ref(storage, `diploma/${uid}/diploma.jpg`);
+export const uploadDiplomaImg = async (now, file) => {
+  const storageRef = ref(storage, `diploma/${now}/diploma.jpg`);
   uploadBytes(storageRef, file).then((snapshot) => {
     console.log("Uploaded a blob or file!");
   });
 };
-export const uploadRestaurantImg = async (uid, file) => {
-  const storageRef = ref(storage, `restaurantPhoto/${uid}/photo.jpg`);
+export const uploadRestaurantImg = async (now, file) => {
+  const storageRef = ref(storage, `restaurantPhoto/${now}/photo.jpg`);
   uploadBytes(storageRef, file).then((snapshot) => {
     console.log("Uploaded a blob or file!");
   });
@@ -186,23 +186,55 @@ export const getCustomerOrderRaw = async (email) => {
   let rawData = [];
   data.forEach((doc) => {
     // const { grandTotal, orderDetail, address, status, restaurantName} = doc.data();
-    rawData.push(doc.data());
+    let tmp = doc.data();
+    tmp.uid = doc.id;
+    rawData.push(tmp);
   });
   console.log(rawData);
   return rawData;
 };
-
-export const getAddressOrderRaw = async (email) => {
+export const getRestaurantOrderRaw = async (name) => {
   const q = query(
-    collection(db, "Address"),
-    where("customerEmail", "==", email),
+    collection(db, "Order"),
+    where("restaurantName", "==", name),
+    orderBy("time", "desc"),
   );
   const data = await getDocs(q);
   let rawData = [];
   data.forEach((doc) => {
     // const { grandTotal, orderDetail, address, status, restaurantName} = doc.data();
-    rawData.push(doc.data());
+    let tmp = doc.data();
+    tmp.uid = doc.id;
+    rawData.push(tmp);
   });
   console.log(rawData);
   return rawData;
+};
+export const updateOrderDelivering = async ({ driver, uid }) => {
+  console.log({ driver, uid });
+  const orderCollectionRef1 = doc(db, "Order", uid);
+  await updateDoc(orderCollectionRef1, {
+    driver: driver,
+    status: "delivering",
+  });
+  window.location.reload();
+
+  // const newFields = { driver: driver, status: "delivering" };
+  // await updateDoc(userDoc, newFields);
+};
+export const updateOrderDelivered = async (uid) => {
+  console.log(uid);
+  const orderCollectionRef1 = doc(db, "Order", uid);
+  await updateDoc(orderCollectionRef1, {
+    status: "delivered",
+  });
+  window.location.reload();
+};
+export const updateOrderCanceled = async (uid) => {
+  console.log(uid);
+  const orderCollectionRef1 = doc(db, "Order", uid);
+  await updateDoc(orderCollectionRef1, {
+    status: "canceled",
+  });
+  window.location.reload();
 };

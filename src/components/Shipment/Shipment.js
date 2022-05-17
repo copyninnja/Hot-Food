@@ -220,7 +220,7 @@ const Shipment = (props) => {
               address_line_2 &&
               postcode &&
               comment ? (
-                <Link to="/order-complete">
+                <Link to="/">
                   <button
                     onClick={() =>
                       props.clearCart(

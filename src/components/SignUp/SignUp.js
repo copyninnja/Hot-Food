@@ -124,7 +124,6 @@ const SignUp = () => {
               <label> or </label>
             </div>
 
-            {/* <Link to={"/" + radioValue}> */}
             <button
               className="btn btn-success  btn-block"
               onClick={auth.signInWithGoogle}

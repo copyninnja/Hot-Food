@@ -68,7 +68,7 @@ const Auth = () => {
           currentUser.type = type === undefined ? "Customer" : type;
           currentUser.status = status;
           setUser(currentUser);
-          // window.history.back();
+          window.history.back();
         };
         fetchData();
       }
@@ -100,7 +100,7 @@ const Auth = () => {
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
         setUser(result.user);
-        window.history.back();
+        // window.history.back();
       })
       .catch((error) => {
         setUser(null);

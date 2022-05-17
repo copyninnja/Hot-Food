@@ -11,7 +11,7 @@ import {
   uploadDiplomaImg,
   createNotification,
   uploadDishImg,
-  getAddressOrderRaw,
+  // getAddressOrderRaw,
   getRestaurantName,
 } from "../api";
 import Foods from "../components/Foods/Foods";
@@ -49,9 +49,9 @@ const AddressPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    getAddressOrderRaw(auth.user.email).then((data) => {
-      setListState({ initLoading: false, list: data });
-    });
+    // getAddressOrderRaw(auth.user.email).then((data) => {
+    //   setListState({ initLoading: false, list: data });
+    // });
   }, []);
   const { initLoading, loading, list } = listState;
 
@@ -66,11 +66,11 @@ const AddressPage = () => {
         }}
       >
         <Link to="/addAddress" className="nav-link">
-        <Button onClick={() => onLoadMore()}>Add New Address</Button>
+          <Button onClick={() => onLoadMore()}>Add New Address</Button>
         </Link>
 
         <Link to="/" className="nav-link">
-        <Button onClick={() => onLoadMore()}>Return</Button>
+          <Button onClick={() => onLoadMore()}>Return</Button>
         </Link>
       </div>
     ) : null;
@@ -98,20 +98,11 @@ const AddressPage = () => {
                 ]}
               >
                 <Skeleton title={false} loading={item.loading} active>
-                  
-                  <List.Item.Meta
-                    title={item.phone}
-                  />
+                  <List.Item.Meta title={item.phone} />
 
-                  <List.Item.Meta  
-                    title={item.postcode}
-                  />
+                  <List.Item.Meta title={item.postcode} />
 
-                  <List.Item.Meta  
-                    title={item.address_line_1}
-                  />
-
-                  
+                  <List.Item.Meta title={item.address_line_1} />
                 </Skeleton>
               </List.Item>
             )}
