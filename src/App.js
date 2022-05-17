@@ -13,7 +13,7 @@ import OrderComplete from "./components/OrderComplete/OrderComplete";
 import SearchResult from "./components/SearchResult/SearchResult";
 import SignUp from "./components/SignUp/SignUp";
 import RestaurantsContextProvider from "./context/RestaurantsContext";
-import { AuthProvider, PrivateRoute, useAuth } from "./context/useAuth";
+import { AuthProvider, PrivateRoute } from "./context/useAuth";
 import ViewportProvider from "./context/ViewportContext";
 import RestaurantsPage from "./pages/CustomerMenu";
 import RestaurantSignUpPage from "./pages/RestaurantSignUpPage";
@@ -22,8 +22,6 @@ import Shipment from "./components/Shipment/Shipment";
 import OrderPage from "./pages/OrderPage";
 import AddressPage from "./pages/AddressPage";
 import { createOrder, getRestaurantName } from "./api";
-import restaurants from "./fakeData/restaurants";
-import { useHistory } from "react-router-dom";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);

@@ -9,13 +9,12 @@ import {
   query,
   where,
   orderBy,
-  onSnapshot,
   getDoc,
 } from "@firebase/firestore";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
-import { Empty } from "antd";
+import { dateFormat } from "../helpers/dateFormat";
 
 const init = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(init);
@@ -76,33 +75,77 @@ export const uploadFoodImg = async (uid, file) => {
   });
 };
 
+//get request data from db
+export const getRequestList = async (select) => {
+  let listArr = [];
+  if (select.select === 1) {
+    listArr = getAllRequestList();
+  } else {
+    listArr = getDoneRequestList();
+  }
+  console.log("listarr", listArr);
+  return listArr;
+};
+
 export const getAllRequestList = async () => {
   let listArr = [];
   const q = query(requestCollectionRef, orderBy("time", "desc"));
-  const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    let requestList = {};
-    querySnapshot.forEach((doc) => {
-      requestList = doc.data();
-      listArr.push(requestList);
-    });
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((doc) => {
+    listArr.push({ ...doc.data(), id: doc.id });
   });
-  console.log("fucall", listArr);
+  //console.log("fucall",listArr)
   return listArr;
 };
 
 export const getDoneRequestList = async () => {
   let listArr = [];
   const qs = query(requestCollectionRef, where("status", "!=", "Not verified"));
-  const unsubscribe = onSnapshot(qs, (querySnapshot) => {
-    let requestLists = {};
-    querySnapshot.forEach((doc) => {
-      requestLists = doc.data();
-      listArr.push(requestLists);
-    });
+  const querySnapshot = await getDocs(qs);
+  querySnapshot.forEach((doc) => {
+    listArr.push({ ...doc.data(), id: doc.id });
   });
-  console.log("fucdone", listArr);
+  //console.log("fucdone",listArr);
   return listArr;
 };
+
+//get each request detail content:
+export const getRequestContent = async (id) => {
+  let detail = {};
+  let contentlist = [];
+  console.log("listid", id);
+  const data = await getDoc(doc(db, "adminList", id));
+  if (data.exists()) {
+    console.log("data", data.data());
+    detail = data.data();
+    const creatTime = dateFormat(new Date(data.data().time));
+    const newStorage = storage;
+    const pathRerence = ref(newStorage, data.data().diplomaUrl);
+    // getBytes(pathRerence, 64)
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    await getDownloadURL(pathRerence)
+      .then((url) => {
+        console.log("url", url);
+        detail.imgUrl = url;
+        detail.time = creatTime;
+        console.log("detail", detail);
+        contentlist.push(detail);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  } else {
+    console.log("No such document");
+  }
+
+  return contentlist;
+};
+
 export const getRestaurantsRaw = async () => {
   const data = await getDocs(restaurantsCollectionRef);
   let restaurantsData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
@@ -132,6 +175,14 @@ export const updateUser = async (id, age) => {
   const newFields = { age: age + 1 };
   await updateDoc(userDoc, newFields);
 };
+
+export const updateRequest = async (id, newStatus, message) => {
+  console.log(id, newStatus, message);
+  const requestDoc = doc(db, "adminList", id);
+  const newFields = { status: newStatus, comment: message };
+  await updateDoc(requestDoc, newFields);
+};
+
 export const createRequest = async (data) => {
   data.status = "Not verified";
   data.comment = null;

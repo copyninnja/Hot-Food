@@ -31,39 +31,6 @@ const CustomerMenu = () => {
     }
   }, [auth]);
 
-  useEffect(() => {
-    const searchRestaurants = () => {
-      if (!allRestaurants) {
-        return null;
-      }
-
-      let results = allRestaurants;
-
-      if (isFiltersActive(activeFilterList)) {
-        results = results.filter(
-          (restaurant) => activeFilterList[restaurant.priceRange],
-        );
-      }
-
-      if (searchTerm !== "") {
-        results = results.filter(
-          (restaurant) =>
-            restaurant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            restaurant.description
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase()),
-        );
-      }
-
-      setSearchResults(results);
-
-      if (searchTerm === "" && !isFiltersActive(activeFilterList)) {
-        setSearchResults(null);
-      }
-    };
-
-    searchRestaurants();
-  }, [allRestaurants, searchTerm, activeFilterList]);
   return <RestaurantMenu allRestaurants={allRestaurants}></RestaurantMenu>;
 };
 

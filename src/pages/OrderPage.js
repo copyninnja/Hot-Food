@@ -1,24 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import { useAuth } from "../context/useAuth";
-import { useForm } from "react-hook-form";
 import { Select } from "antd";
 import "antd/dist/antd.css";
 import { List, Button, Skeleton } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import {
-  uploadDiplomaImg,
-  createNotification,
-  uploadDishImg,
   getCustomerOrderRaw,
   getRestaurantOrderRaw,
-  getRestaurantName,
   updateOrderDelivering,
   updateOrderDelivered,
   updateOrderCanceled,
 } from "../api";
-import Foods from "../components/Foods/Foods";
-import { RestaurantsContext } from "../context/RestaurantsContext";
 import { dateFormat } from "../helpers/dateFormat";
 import OrderComplete from "../components/OrderComplete/OrderComplete";
 const OrderPage = () => {
