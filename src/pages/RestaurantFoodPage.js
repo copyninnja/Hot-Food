@@ -29,17 +29,11 @@ const RestaurantPage = () => {
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     setModalVisible();
-    getUserUID(auth.user.email).then((res) => {
-      console.log(res);
-      alert("uid:"+res);
-      data.merchantID = res;
-      data.img=downLoadUrl;
-      alert("saveData:"+JSON.stringify(data));
-      createNotification(data);
-      createFood(data);
-    });
-    
-    
+    data.restaurantEmail = auth.user.email;
+    data.img=downLoadUrl;
+    alert("saveData:"+JSON.stringify(data));
+    createNotification(data);
+    createFood(data);
     // data.RestaurantID = auth.user.uid;
     // const a = Object.assign(rawData, data);
     // createRequest(a);
