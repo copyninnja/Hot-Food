@@ -12,26 +12,19 @@ import sandwich from "../../images/foodicon/sandwich.png";
 import shawarma from "../../images/foodicon/shawarma.png";
 import FoodItem from "../FoodItem/FoodItem";
 import "./Foods.css";
-import {getFooditemList} from "../../api/FoodItemApi"
-import { useAuth } from "../../context/useAuth";
 
 const Foods = (props) => {
   const [foods, setFoods] = useState([]);
   // const [ selectedFoodType, setSelectedFoodType ] = useState('lunch');
   const [selectedFastFoodType, setSelectedFastFoodType] = useState("pizza");
-  const auth = useAuth();
-  
 
-  useEffect(async() => {
-	const fooditemList = await getFooditemList(auth.user.uid);
-	alert(JSON.stringify(fooditemList));
+  useEffect(() => {
     setFoods(allFoods);
   }, []);
 
   // const selectedFoods = foods.filter((food) => food.category === selectedFoodType);
   const selectedFastFoods = foods.filter(
-    //(food) => food.restaurantID === auth.user.uid,
-	(food) => food.category === selectedFastFoodType,
+    (food) => food.category === selectedFastFoodType,
   );
 
   return (

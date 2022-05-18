@@ -44,7 +44,7 @@ const NavList = () => {
     <Layout>
       <Header className="header">
         <div className="logo">
-          <img src={Logo} alt="web6251 logo" />
+          <img className="logoimg" src={Logo} alt="web6251 logo" />
         </div>
         <Menu
           theme="dark"
