@@ -15,6 +15,7 @@ import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
 import { getStorage, uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { dateFormat } from "../helpers/dateFormat";
+//const fs = require("fs");
 
 const init = firebase.initializeApp(firebaseConfig);
 const db = getFirestore(init);
@@ -149,6 +150,7 @@ export const getRequestContent = async (id) => {
 export const getRestaurantsRaw = async () => {
   const data = await getDocs(restaurantsCollectionRef);
   let restaurantsData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  //localStorage.setItem("state", JSON.stringify(restaurantsData));
   return restaurantsData;
 };
 export const getUserTypeAndStatus = async (email) => {
