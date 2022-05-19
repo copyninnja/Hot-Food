@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import allFoods from "../../fakeData/index";
 import breakfast from "../../images/foodicon/breakfast.png";
 import burger from "../../images/foodicon/burger.png";
@@ -11,20 +12,46 @@ import pizza from "../../images/foodicon/pizza.png";
 import sandwich from "../../images/foodicon/sandwich.png";
 import shawarma from "../../images/foodicon/shawarma.png";
 import FoodItem from "../FoodItem/FoodItem";
+import {getFooditemList} from "../../api/FoodItemApi";
+import { useAuth } from "../../context/useAuth";
+import {findRestaurantEmail} from "../../api/RestaurantApi";
 import "./Foods.css";
 
 const Foods = (props) => {
   const [foods, setFoods] = useState([]);
   // const [ selectedFoodType, setSelectedFoodType ] = useState('lunch');
   const [selectedFastFoodType, setSelectedFastFoodType] = useState("pizza");
+  const { restaurantId } = useParams();
+  const auth = useAuth();
 
-  useEffect(() => {
-    setFoods(allFoods);
+  // useEffect(() => {
+  //   setFoods(allFoods);
+  // }, []);
+
+  useEffect(async() => {
+    
+    
+    if(typeof(restaurantId) == "undefined"){
+      const fooditemList = await getFooditemList(auth.user.email);
+      setFoods(fooditemList);
+    }else{
+      const restaurantEmail = await findRestaurantEmail(restaurantId);
+      getFooditemList(restaurantEmail).then((menu) => {
+        
+        setTimeout(function(){
+          setFoods(menu);
+        },500);
+  
+        
+      });
+     
+    }
   }, []);
 
   // const selectedFoods = foods.filter((food) => food.category === selectedFoodType);
   const selectedFastFoods = foods.filter(
-    (food) => food.category === selectedFastFoodType,
+    //(food) => food.category === selectedFastFoodType,
+    (food) => food.restaurantEmail === auth.user.email,
   );
 
   return (
@@ -181,7 +208,7 @@ const Foods = (props) => {
         </nav>
 
         <div className="row my-5">
-          {selectedFastFoods.map((food) => (
+          {foods.map((food) => (
             <FoodItem food={food} key={food.id} />
           ))}
         </div>

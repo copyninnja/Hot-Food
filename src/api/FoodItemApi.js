@@ -22,12 +22,14 @@ import {
 
   
   
-  export const getFooditemList = async (restaurantID) => {
+  export const getFooditemList = async (restaurantEmail) => {
+    
     const q = query(
       collection(db, "FoodItem"),
-      where("restaurantID", "==", restaurantID),
+      where("restaurantEmail", "==", restaurantEmail),
     );
     const data = await getDocs(q);
+    
     let listData = [];
     data.forEach((doc) => {
       let finalDoc = doc.data();
@@ -43,6 +45,8 @@ import {
     const foodItemDoc = doc(db, "FoodItem", id);
     await deleteDoc(foodItemDoc);
   };
+
+  
 
   export const createFoodItem = async (data) => {
     // console.log(data);
@@ -64,5 +68,57 @@ import {
   
     // const newFields = { driver: driver, status: "delivering" };
     // await updateDoc(userDoc, newFields);
+  };
+
+  export const getFoodItemID = async (email) => {
+    const q = query(foodCollectionRef, where("email", "==", email));
+    const querySnapshot = await getDocs(q);
+    let id;
+    querySnapshot.forEach((doc) => {
+      id = doc.id;
+    });
+    return id;
+  };
+
+  export const findFoodItem = async (id) => {
+    const docRef = doc(db, "FoodItem", id);
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      alert(JSON.stringify(docSnap.data()));
+        return docSnap.data();
+    }else {
+        console.log("No such document!");
+    }
+    
+  };
+
+  export const getAllFoodItem = async () => {
+    const data = await getDocs(foodCollectionRef);
+    alert("inner");
+    try {
+      let restaurantsData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      // normal;
+      return restaurantsData;
+    } catch (error) {
+      alert("error");
+      
+    }
+    
+    
+    
+  };
+
+  export const findFoodItemList = async (id) => {
+    const docRef = doc(db, "FoodItem", id);
+    const docSnap = await getDoc(docRef);
+    var res = [];
+    if (docSnap.exists()) {
+      res.push(docSnap.data());
+      return res;
+    }else {
+        console.log("No such document!");
+    }
+    
   };
   

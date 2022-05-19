@@ -20,7 +20,7 @@ const RestaurantPage = () => {
   };
   const dishPhotoUpload = async (data) => {
     const ddurl=await uploadDishImg(auth.user.uid, data);
-    
+    alert(ddurl);
     setTimeout(function(){
       setDownLoadUrl(ddurl);
     },500);
