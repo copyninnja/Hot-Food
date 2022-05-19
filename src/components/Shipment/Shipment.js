@@ -152,7 +152,7 @@ const Shipment = (props) => {
               />
               <div className="px-4">
                 <h6>{item.name}</h6>
-                <h4 className="text-danger">${item.price.toFixed(2)}</h4>
+                <h4 className="text-danger">${parseFloat(item.price).toFixed(2)}</h4>
                 <p>
                   <small>Delivery free</small>
                 </p>

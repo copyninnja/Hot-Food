@@ -6,31 +6,39 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-//import allFoods from "../../fakeData/";
 import suggestionFood from "../../fakeData/suggestionFood";
 import RecommendFood from "../RecommendFood/RecommendFood";
 import "./FoodDetails.css";
-import {findFoodItem,getAllFoodItem} from "../../api/FoodItemApi";
+import {findFoodItem} from "../../api/FoodItemApi";
 
 const FoodDetails = (props) => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if(window.location.href.indexOf("#reloaded")==-1){
+      window.location.href=window.location.href+"#reloaded";
+      window.location.reload();
+    }
+    
+  }, []);
+  let history = useHistory();
+
   const { restaurantId, id } = useParams();
+  //const currentFood = allFoods.find((food) => food.id === id);
+
   const [quantity, setQuantity] = useState(1);
   const [isSuccess, setIsSuccess] = useState(false);
   const [currentFood, setCurrentFood] = useState({});
 
+
   useEffect(() => {
-    window.scrollTo(0, 0);
-    
     async function getAllFood() {
       const res = await findFoodItem(id);
-      //res.quantity = 1;
+      res.quantity = 1;
       setCurrentFood(res);
     }
     getAllFood();
+
   }, []);
-  let history = useHistory();
-  
-  //const currentFood = allFoods.find((food) => food.id === id);
 
   useEffect(() => {
     if (currentFood.quantity) {
@@ -38,9 +46,8 @@ const FoodDetails = (props) => {
     }
   }, [currentFood.quantity]);
 
-  
-
   const finalCartHandler = (currentFood) => {
+    alert("finalCartHandler");
     props.restHandler(restaurantId);
     currentFood.quantity = quantity;
     console.log(currentFood);
@@ -68,6 +75,7 @@ const FoodDetails = (props) => {
   };
 
   function goBack() {
+    alert("goBack");
     history.push("/");
     window.scrollTo(0, 9999);
   }

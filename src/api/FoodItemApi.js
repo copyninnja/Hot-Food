@@ -85,7 +85,6 @@ import {
     const docSnap = await getDoc(docRef);
     
     if (docSnap.exists()) {
-      alert(JSON.stringify(docSnap.data()));
         return docSnap.data();
     }else {
         console.log("No such document!");
