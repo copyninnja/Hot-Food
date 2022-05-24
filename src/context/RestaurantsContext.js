@@ -1,11 +1,12 @@
-import React, { createContext, useState, useCallback } from "react";
+import React, { createContext, useState, useCallback, useEffect } from "react";
 import { getRestaurantsRaw } from "../api";
-
 export const RestaurantsContext = createContext();
 
 const RestaurantsContextProvider = (props) => {
   const [restaurants, setRestaurants] = useState({ allRestaurants: null });
-
+  useEffect(() => {
+    getRestaurants();
+  }, []);
   const getRestaurants = useCallback(() => {
     return getRestaurantsRaw()
       .then(function (jsonData) {
@@ -22,7 +23,7 @@ const RestaurantsContextProvider = (props) => {
   }, []);
 
   return (
-    <RestaurantsContext.Provider value={{ restaurants, getRestaurants }}>
+    <RestaurantsContext.Provider value={{ restaurants }}>
       {props.children}
     </RestaurantsContext.Provider>
   );

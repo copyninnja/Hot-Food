@@ -15,7 +15,7 @@ const OrderComplete = (props) => {
   return (
     <div className="container my-3">
       <div className="row">
-        <img className="img-fluid" src={MapImg} alt="" />
+        <img style={{ width: "-webkit-fill-available" }} src={MapImg} alt="" />
       </div>
       <div className="row">
         <div className="bg-light p-3 rounded">

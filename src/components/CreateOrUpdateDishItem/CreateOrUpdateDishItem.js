@@ -1,15 +1,14 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "../../index.css";
 import { useAuth } from "../../context/useAuth";
 import { useForm } from "react-hook-form";
 import "antd/dist/antd.css";
 import { Upload, Button, Modal } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { createNotification, uploadDishImg, createFood} from "../../api";
-import {updateFoodItem} from "../../api/FoodItemApi";
+import { createNotification, uploadDishImg, createFood } from "../../api";
+import { updateFoodItem } from "../../api/FoodItemApi";
 
 import Foods from "../Foods/Foods";
-
 
 const CreateOrUpdateDishItem = (props) => {
   const [modalState, setModalState] = useState(false);
@@ -17,47 +16,43 @@ const CreateOrUpdateDishItem = (props) => {
   const [modityType, setModityType] = useState();
   const [buttonDisplay, setButtonDisplay] = useState();
   const auth = useAuth();
-  const { id, foodName, foodDescription, foodPrice, photoUrl} = props.food;
+  const { id, foodName, foodDescription, foodPrice, photoUrl } = props.food;
   useEffect(() => {
-	if(id!=null){
-        setButtonDisplay("update a foodItem");
-        setModityType("update");
-    }else{
-        setButtonDisplay("create a foodItem");
-        setModityType("create")
+    if (id != null) {
+      setButtonDisplay("update a foodItem");
+      setModityType("update");
+    } else {
+      setButtonDisplay("create a foodItem");
+      setModityType("create");
     }
-    
   }, []);
 
   const setModalVisible = () => {
     setModalState(!modalState);
-    
   };
 
-  
   const dishPhotoUpload = async (data) => {
-    const ddurl=await uploadDishImg(auth.user.uid, data);
-    
-    setTimeout(function(){
+    const ddurl = await uploadDishImg(auth.user.uid, data);
+
+    setTimeout(function () {
       setDownLoadUrl(ddurl);
-    },500);
-    
+    }, 500);
   };
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     setModalVisible();
     data.restaurantID = auth.user.uid;
-    data.photoUrl=downLoadUrl;
-    alert(JSON.stringify(data));
-    
+    data.photoUrl = downLoadUrl;
+    //alert(JSON.stringify(data));
+
     createNotification(data);
-    
-    if(modityType === "update"){
-        alert(JSON.stringify(data));
-        updateFoodItem(id,data);
+
+    if (modityType === "update") {
+      //alert(JSON.stringify(data));
+      updateFoodItem(id, data);
     }
-    if(modityType === "create"){
-        createFood(data);
+    if (modityType === "create") {
+      createFood(data);
     }
     // data.RestaurantID = auth.user.uid;
     // const a = Object.assign(rawData, data);
@@ -128,8 +123,6 @@ const CreateOrUpdateDishItem = (props) => {
           </div>
         </form>
       </Modal>
-
-      
     </div>
   );
 };

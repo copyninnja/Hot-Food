@@ -7,6 +7,7 @@ import RequestDetail from "../RequestDetail/RequestDetail";
 //import { render } from "@testing-library/react";
 import { useAuth } from "../../context/useAuth";
 import Logo from "../../images/logo2.png";
+import { useHistory } from "react-router-dom";
 const { Header, Sider } = Layout;
 const items1 = ["Sign-up Request", "Done", "Sign Out"].map((key) => ({
   key,
@@ -15,7 +16,7 @@ const items1 = ["Sign-up Request", "Done", "Sign Out"].map((key) => ({
 
 const NavList = () => {
   const auth = useAuth();
-
+  const history = useHistory();
   const [selectItem, setselectItem] = useState(1);
   const [Id, setId] = useState("");
   //set click event for menu item:
@@ -30,7 +31,9 @@ const NavList = () => {
     } else if (e.key === "Sign Out") {
       //console.log("!!!!!!!!!!!!");
       auth.signOut();
-      window.history.back();
+      setTimeout(() => {
+        history.push("/");
+      }, 500);
     }
   };
 

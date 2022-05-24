@@ -8,6 +8,7 @@ const Shipment = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     getAddress();
+    console.log(props);
   }, []);
   const getAddress = useCallback(() => {
     return getAddressRaw(auth.user.email)
@@ -133,7 +134,11 @@ const Shipment = (props) => {
         <div className="offset-md-1 col-md-5">
           <div className="restaurant-info mb-3">
             <h4>
-              From <strong> Fire Spot</strong>
+              From{" "}
+              <strong>
+                {" "}
+                {props.cart.length > 0 ? props.cart[0].restaurantName : ""}
+              </strong>
             </h4>
             <h5>Rank：⭐️⭐️⭐️⭐️</h5>
             <h5>107 Rd No 9</h5>
@@ -152,7 +157,9 @@ const Shipment = (props) => {
               />
               <div className="px-4">
                 <h6>{item.name}</h6>
-                <h4 className="text-danger">${parseFloat(item.price).toFixed(2)}</h4>
+                <h4 className="text-danger">
+                  ${parseFloat(item.price).toFixed(2)}
+                </h4>
                 <p>
                   <small>Delivery free</small>
                 </p>

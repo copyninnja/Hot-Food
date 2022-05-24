@@ -9,16 +9,15 @@ import { useHistory, useParams } from "react-router-dom";
 import suggestionFood from "../../fakeData/suggestionFood";
 import RecommendFood from "../RecommendFood/RecommendFood";
 import "./FoodDetails.css";
-import {findFoodItem} from "../../api/FoodItemApi";
+import { findFoodItem } from "../../api/FoodItemApi";
 
 const FoodDetails = (props) => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    if(window.location.href.indexOf("#reloaded")==-1){
-      window.location.href=window.location.href+"#reloaded";
+    if (window.location.href.indexOf("#reloaded") == -1) {
+      window.location.href = window.location.href + "#reloaded";
       window.location.reload();
     }
-    
   }, []);
   let history = useHistory();
 
@@ -29,7 +28,6 @@ const FoodDetails = (props) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [currentFood, setCurrentFood] = useState({});
 
-
   useEffect(() => {
     async function getAllFood() {
       const res = await findFoodItem(id);
@@ -37,7 +35,6 @@ const FoodDetails = (props) => {
       setCurrentFood(res);
     }
     getAllFood();
-
   }, []);
 
   useEffect(() => {
@@ -47,7 +44,7 @@ const FoodDetails = (props) => {
   }, [currentFood.quantity]);
 
   const finalCartHandler = (currentFood) => {
-    alert("finalCartHandler");
+    //alert("finalCartHandler");
     props.restHandler(restaurantId);
     currentFood.quantity = quantity;
     console.log(currentFood);
@@ -59,23 +56,11 @@ const FoodDetails = (props) => {
     setTimeout(() => setIsSuccess(false), 1500);
   }
 
-  const [suggestFoods, setSuggestFoods] = useState([]);
-
-  useEffect(() => {
-    const suggestFood = suggestionFood.slice(0, 3);
-    setSuggestFoods(suggestFood);
-  }, []);
-
   let m = 0;
   let n = 3;
-  const newSuggestionFood = () => {
-    const newSuggestFood = suggestionFood.slice(m + 3, n + 3);
-    suggestionFood.splice(m, 3);
-    setSuggestFoods(newSuggestFood);
-  };
 
   function goBack() {
-    alert("goBack");
+    //alert("goBack");
     history.push("/");
     window.scrollTo(0, 9999);
   }
@@ -84,10 +69,7 @@ const FoodDetails = (props) => {
     <div className="food-details container scrollable">
       <div className="text-center">
         <div onClick={goBack}>
-          <button
-            className="btn btn-danger btn-rounded my-3"
-            onClick={newSuggestionFood}
-          >
+          <button className="btn btn-danger btn-rounded my-3">
             <FontAwesomeIcon icon={faWindowClose} />
             <span> Close </span>
           </button>
@@ -96,7 +78,7 @@ const FoodDetails = (props) => {
       <div className="row mb-5">
         <div className="col-md-7 pr-md-4">
           <h1>{currentFood.name}</h1>
-          <p className="my-5">{currentFood.story}</p>
+          <p className="my-5">{currentFood.description}</p>
           <div className="d-flex my-4">
             <h2 className="price">${currentFood.price}</h2>
 
@@ -127,15 +109,6 @@ const FoodDetails = (props) => {
                 <FontAwesomeIcon icon={faCheckCircle} /> Item added to Cart
               </p>
             )}
-          </div>
-          <div className="my-4">
-            {suggestFoods.map((recommendFood) => (
-              <RecommendFood
-                recommendFoods={recommendFood}
-                key={recommendFood.id}
-                currentFood={currentFood}
-              ></RecommendFood>
-            ))}
           </div>
         </div>
 

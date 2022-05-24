@@ -21,7 +21,7 @@ import RestaurantFoodPage from "./pages/RestaurantFoodPage";
 import Shipment from "./components/Shipment/Shipment";
 import OrderPage from "./pages/OrderPage";
 import AddressPage from "./pages/AddressPage";
-import { createOrder, getRestaurantName } from "./api";
+import { createOrder, getRestaurantNameAndEmail } from "./api";
 function App() {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [cart, setCart] = useState([]);
@@ -85,7 +85,8 @@ function App() {
 
   const clearCart = (email, tax, deliveryFee, grandTotal) => {
     setCart([]);
-    getRestaurantName(restWhom).then((name) => {
+    getRestaurantNameAndEmail(restWhom).then(({ name, restaurantEmail }) => {
+      console.log(name, restaurantEmail);
       createOrder(
         cart,
         email,
@@ -94,6 +95,7 @@ function App() {
         grandTotal,
         deliveryDetails,
         name,
+        restaurantEmail,
       );
     });
   };

@@ -12,9 +12,9 @@ import pizza from "../../images/foodicon/pizza.png";
 import sandwich from "../../images/foodicon/sandwich.png";
 import shawarma from "../../images/foodicon/shawarma.png";
 import FoodItem from "../FoodItem/FoodItem";
-import {getFooditemList} from "../../api/FoodItemApi";
+import { getFooditemList } from "../../api/FoodItemApi";
 import { useAuth } from "../../context/useAuth";
-import {findRestaurantEmail} from "../../api/RestaurantApi";
+import { findRestaurantEmail } from "../../api/RestaurantApi";
 import "./Foods.css";
 
 const Foods = (props) => {
@@ -28,35 +28,29 @@ const Foods = (props) => {
   //   setFoods(allFoods);
   // }, []);
 
-  useEffect(async() => {
-    
-    
-    if(typeof(restaurantId) == "undefined"){
-      const fooditemList = await getFooditemList(auth.user.email);
-      setFoods(fooditemList);
-    }else{
-      const restaurantEmail = await findRestaurantEmail(restaurantId);
-      getFooditemList(restaurantEmail).then((menu) => {
-        
-        setTimeout(function(){
-          setFoods(menu);
-        },500);
-  
-        
+  useEffect(() => {
+    if (typeof restaurantId == "undefined") {
+      getFooditemList(auth.user.email).then((data) => {
+        setFoods(data);
       });
-     
+    } else {
+      findRestaurantEmail(restaurantId).then((restEmail) => {
+        getFooditemList(restEmail).then((menu) => {
+          setFoods(menu);
+        });
+      });
     }
   }, []);
 
   // const selectedFoods = foods.filter((food) => food.category === selectedFoodType);
   const selectedFastFoods = foods.filter(
-    //(food) => food.category === selectedFastFoodType,
-    (food) => food.restaurantEmail === auth.user.email,
+    (food) => food.category === selectedFastFoodType,
+    // (food) => food.restaurantEmail === auth.user.email,
   );
 
   return (
-    <section className="food-area my-5">
-      <div className="container">
+    <div className="container">
+      <section className="food-area">
         {/* <nav>
 					<ul className="nav justify-content-center">
 						<li className="nav-item" onClick={() => setSelectedFoodType('breakfast')}>
@@ -86,126 +80,6 @@ const Foods = (props) => {
 					</ul>
 				</nav>
 				<div className="row my-5">{selectedFoods.map((food) => <FoodItem food={food} key={food.id} />)}</div> */}
-        <nav>
-          <ul className="nav justify-content-center mt-5">
-            <li
-              className="nav-item"
-              onClick={() => setSelectedFastFoodType("shawarma")}
-            >
-              <span
-                to="shawarma"
-                className={
-                  selectedFastFoodType === "shawarma"
-                    ? "active nav-link"
-                    : "nav-link"
-                }
-              >
-                <img
-                  src={shawarma}
-                  alt="foodIcon"
-                  width="55px"
-                  className="mr-2"
-                />
-                shawarma
-              </span>
-            </li>
-            <li
-              className="nav-item"
-              onClick={() => setSelectedFastFoodType("burger")}
-            >
-              <span
-                to="burger"
-                className={
-                  selectedFastFoodType === "burger"
-                    ? "active nav-link"
-                    : "nav-link"
-                }
-              >
-                <img
-                  src={burger}
-                  alt="foodIcon"
-                  width="35px"
-                  className="mr-2"
-                />
-                Burger
-              </span>
-            </li>
-            <li
-              className="nav-item"
-              onClick={() => setSelectedFastFoodType("pizza")}
-            >
-              <span
-                to="pizza"
-                className={
-                  selectedFastFoodType === "pizza"
-                    ? "active nav-link"
-                    : "nav-link"
-                }
-              >
-                <img src={pizza} alt="foodIcon" width="35px" className="mr-2" />
-                Pizza
-              </span>
-            </li>
-            <li
-              className="nav-item"
-              onClick={() => setSelectedFastFoodType("sandwich")}
-            >
-              <span
-                to="sandwich"
-                className={
-                  selectedFastFoodType === "sandwich"
-                    ? "active nav-link"
-                    : "nav-link"
-                }
-              >
-                <img
-                  src={sandwich}
-                  alt="foodIcon"
-                  width="35px"
-                  className="mr-2"
-                />
-                Sandwich
-              </span>
-            </li>
-            <li
-              className="nav-item"
-              onClick={() => setSelectedFastFoodType("icecream")}
-            >
-              <span
-                to="icecream"
-                className={
-                  selectedFastFoodType === "icecream"
-                    ? "active nav-link"
-                    : "nav-link"
-                }
-              >
-                <img
-                  src={iceCream}
-                  alt="foodIcon"
-                  width="35px"
-                  className="mr-2"
-                />
-                Ice Cream
-              </span>
-            </li>
-            <li
-              className="nav-item"
-              onClick={() => setSelectedFastFoodType("drinks")}
-            >
-              <span
-                to="drinks"
-                className={
-                  selectedFastFoodType === "drinks"
-                    ? "active nav-link"
-                    : "nav-link"
-                }
-              >
-                <img src={drink} alt="foodIcon" width="30px" className="mr-2" />
-                Drinks
-              </span>
-            </li>
-          </ul>
-        </nav>
 
         <div className="row my-5">
           {foods.map((food) => (
@@ -227,8 +101,8 @@ const Foods = (props) => {
         ) : (
           <></>
         )}
-      </div>
-    </section>
+      </section>
+    </div>
   );
 };
 

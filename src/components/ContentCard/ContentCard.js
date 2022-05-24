@@ -5,7 +5,6 @@ import { Descriptions, message } from "antd";
 import { Image } from "antd";
 import { Input } from "antd";
 import { Button } from "antd";
-import { Alert } from "antd";
 import { Modal } from "antd";
 import { Spin } from "antd";
 import { getRequestContent, updateRetaurantStatus } from "../../api";

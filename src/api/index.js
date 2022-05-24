@@ -72,7 +72,7 @@ export const uploadFoodImg = async (uid, file) => {
     console.log("Uploaded a blob or file!");
   });
   getDownloadURL(storageRef).then((url) => {
-    alert(url);
+    //alert(url);
   });
 };
 
@@ -204,6 +204,7 @@ export const createRequest = async (data) => {
 
 export const createNotification = async (data) => {
   data.status = "Not seen";
+  data.time = Date.now();
   // console.log(data);
   // {foodName: 'tmp', foodDescription: 'no', foodPrice: '1', restaurantID: 'ZlXgHMiTWzgpK9YwtL3zsbF75St1', status: 'Not seen'}
   await addDoc(notificationCollectionRef, data);
@@ -244,6 +245,7 @@ export const createOrder = async (
   grandTotal,
   address,
   restaurantName,
+  restaurantEmail,
 ) => {
   console.log(
     cart,
@@ -265,14 +267,15 @@ export const createOrder = async (
     restaurantName: restaurantName,
     status: "not taken",
     time: Date.now(),
+    restaurantEmail: restaurantEmail,
   });
 };
-export const getRestaurantName = async (id) => {
+export const getRestaurantNameAndEmail = async (id) => {
   const docRef = doc(db, "restaurants", id);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    return docSnap.data().name, docSnap.data().name;
+    return { name: docSnap.data().name, restaurantEmail: docSnap.data().email };
   } else {
     console.log("No such document!");
   }
@@ -294,10 +297,10 @@ export const getCustomerOrderRaw = async (email) => {
   console.log(rawData);
   return rawData;
 };
-export const getRestaurantOrderRaw = async (name) => {
+export const getRestaurantOrderRaw = async (email) => {
   const q = query(
     collection(db, "Order"),
-    where("restaurantName", "==", name),
+    where("restaurantEmail", "==", email),
     orderBy("time", "desc"),
   );
   const data = await getDocs(q);
@@ -347,4 +350,27 @@ export const updateRetaurantStatus = async (uid) => {
   const docRef = doc(db, "users", uid);
   const newFields = { status: "verified" };
   await updateDoc(docRef, newFields);
+};
+export const getNotification = async () => {
+  const q = query(
+    collection(db, "notifications"),
+    where("status", "==", "Not seen"),
+    orderBy("time", "desc"),
+  );
+  const data = await getDocs(q);
+  let rawData = [];
+  data.forEach((doc) => {
+    // const { grandTotal, orderDetail, address, status, restaurantName} = doc.data();
+    let tmp = doc.data();
+    tmp.uid = doc.id;
+    rawData.push(tmp);
+  });
+  console.log(rawData);
+  return rawData;
+};
+export const updateNotifiRead = async (uid) => {
+  const orderCollectionRef1 = doc(db, "notifications", uid);
+  await updateDoc(orderCollectionRef1, {
+    status: "seen",
+  });
 };

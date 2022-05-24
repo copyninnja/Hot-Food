@@ -11,12 +11,12 @@ const AddressItem = (props) => {
   }, []);
 
   const auth = useAuth();
-  const {contactName,phone,address_line_1,address_line_2,postcode} =
+  const { contactName, phone, address_line_1, address_line_2, postcode } =
     props.addressDetails;
 
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
-    alert(JSON.stringify(data));
+    //alert(JSON.stringify(data));
     console.log(data);
     props.addressDetailsHandler(data);
     data.customerEmail = auth.user.email;
@@ -44,7 +44,6 @@ const AddressItem = (props) => {
           <h4>Add Delivery Address</h4>
           <hr />
           <form onSubmit={handleSubmit(onSubmit)} className="py-5">
-            
             <div className="form-group">
               <input
                 name="postcode"
@@ -109,7 +108,6 @@ const AddressItem = (props) => {
                 <span className="error">Contact Number is required</span>
               )}
             </div>
-
 
             <div className="form-group">
               <button className="btn btn-danger btn-block" type="submit">

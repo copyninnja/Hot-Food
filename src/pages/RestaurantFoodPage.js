@@ -5,7 +5,12 @@ import { useForm } from "react-hook-form";
 import "antd/dist/antd.css";
 import { Upload, Button, Modal } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { createNotification, uploadDishImg, createFood,getUserUID} from "../api";
+import {
+  createNotification,
+  uploadDishImg,
+  createFood,
+  getUserUID,
+} from "../api";
 
 import Foods from "../components/Foods/Foods";
 
@@ -13,25 +18,22 @@ const RestaurantPage = () => {
   const [modalState, setModalState] = useState(false);
   const [downLoadUrl, setDownLoadUrl] = useState();
   const auth = useAuth();
-  
 
   const setModalVisible = () => {
     setModalState(!modalState);
   };
-  const dishPhotoUpload = async (data) => {
-    const ddurl=await uploadDishImg(auth.user.uid, data);
-    alert(ddurl);
-    setTimeout(function(){
+  const dishPhotoUpload = (data) => {
+    uploadDishImg(auth.user.uid, data).then((ddurl) => {
       setDownLoadUrl(ddurl);
-    },500);
-    
+    });
   };
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     setModalVisible();
     data.restaurantEmail = auth.user.email;
-    data.img=downLoadUrl;
-    alert("saveData:"+JSON.stringify(data));
+    data.restaurantName = auth.user.displayName;
+    data.img = downLoadUrl;
+    //alert("saveData:"+JSON.stringify(data));
     createNotification(data);
     createFood(data);
     // data.RestaurantID = auth.user.uid;

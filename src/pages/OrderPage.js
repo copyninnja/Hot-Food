@@ -59,13 +59,12 @@ const OrderPage = () => {
         setListState({ initLoading: false, list: data, type: "Customer" });
       });
     } else if (auth.user.type == "Restaurant") {
-      getRestaurantOrderRaw(auth.user.displayName).then((data) => {
+      getRestaurantOrderRaw(auth.user.email).then((data) => {
         setListState({ initLoading: false, list: data, type: "Restaurant" });
       });
     }
   }, []);
   const { initLoading, loading, list, type } = listState;
-
   const [rawData, setRawData] = useState({});
   const { Option } = Select;
   function handleCategoryChange(value) {
@@ -199,7 +198,9 @@ const OrderPage = () => {
                   />
                   <div className="px-4">
                     <h6>{item.name}</h6>
-                    <h4 className="text-danger">${parseFloat(item.price).toFixed(2)}</h4>
+                    <h4 className="text-danger">
+                      ${parseFloat(item.price).toFixed(2)}
+                    </h4>
                     <p>
                       <small>Delivery description: {item.description}</small>
                     </p>
