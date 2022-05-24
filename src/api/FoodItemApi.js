@@ -12,6 +12,7 @@ import {
   onSnapshot,
   getDoc,
 } from "@firebase/firestore";
+import { Descriptions } from "antd";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "../firebaseconfig";
 
@@ -49,18 +50,22 @@ export const createFoodItem = async (data) => {
 };
 
 export const updateFoodItem = async (id, data) => {
-  //alert("id"+id);
   const foodItemRef = doc(db, "FoodItem", id);
+  const docSnap = await getDoc(foodItemRef);
   try {
-    await updateDoc(foodItemRef, data);
+    const newFields = {
+      name: data.name,
+      description: data.description,
+      price: data.price,
+    };
+    if (typeof data.img != "undefined") {
+      newFields.img = data.img;
+    }
+    await updateDoc(foodItemRef, newFields);
   } catch (error) {
-    //alert(JSON.stringify(error));
+    alert(JSON.stringify(error));
   }
-
   window.location.reload();
-
-  // const newFields = { driver: driver, status: "delivering" };
-  // await updateDoc(userDoc, newFields);
 };
 
 export const getFoodItemID = async (email) => {

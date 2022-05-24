@@ -50,7 +50,7 @@ const RestaurantPage = () => {
         className="dishButton"
         onClick={() => setModalVisible()}
       >
-        Create a new dish / Edit menu
+        Create a new dish
       </Button>
       <Modal
         title="create a new dish"
