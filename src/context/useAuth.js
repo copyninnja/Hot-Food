@@ -6,6 +6,7 @@ import "firebase/compat/auth";
 import "firebase/analytics";
 import { createUser, getUserTypeAndStatus } from "../api";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { getAuth, sendEmailVerification } from "firebase/auth";
 
 //***************** Fire base Initialization ************************
 const AuthContext = createContext();
@@ -128,6 +129,7 @@ const Auth = () => {
             thisUser.type = type;
             setUser(thisUser);
           });
+        result.user.sendEmailVerification();
       })
       .catch((error) => {
         setUser(null);

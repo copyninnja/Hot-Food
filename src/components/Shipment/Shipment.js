@@ -13,8 +13,10 @@ const Shipment = (props) => {
   const getAddress = useCallback(() => {
     return getAddressRaw(auth.user.email)
       .then(function (jsonData) {
-        console.log(jsonData);
-        props.deliveryDetailsHandler(jsonData);
+        if (jsonData.length > 0) {
+          console.log(jsonData);
+          props.deliveryDetailsHandler(jsonData);
+        }
       })
       .catch((error) => {
         console.log(
