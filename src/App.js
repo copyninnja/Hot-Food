@@ -7,6 +7,7 @@ import AdminPage from "./components/AdminPage/AdminPage";
 import Banner from "./components/Banner/Banner";
 import FoodDetails from "./components/FoodDetails/FoodDetails";
 import Foods from "./components/Foods/Foods";
+import CustomerFoods from "./components/Foods/CustomerFoods";
 import Header from "./components/Header/Header";
 import NotFound from "./components/NotFound/NotFound";
 import OrderComplete from "./components/OrderComplete/OrderComplete";
@@ -135,7 +136,7 @@ function App() {
               <Route exact path="/restaurants/:restaurantId">
                 <Header cart={cart} />
                 <Banner />
-                <Foods cart={cart} from="customer" />
+                <CustomerFoods cart={cart} from="customer" />
               </Route>
 
               <Route path="/restaurants/:restaurantId/food/:id">
