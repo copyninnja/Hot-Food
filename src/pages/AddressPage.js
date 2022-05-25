@@ -50,9 +50,9 @@ const AddressPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-     getAddressList(auth.user.email).then((data) => {
-       setListState({ initLoading: false, list: data });
-     });
+    getAddressList(auth.user.email).then((data) => {
+      setListState({ initLoading: false, list: data });
+    });
   }, []);
   const { initLoading, loading, list } = listState;
 
@@ -128,7 +128,7 @@ const AddressPage = () => {
                   />
                   <div className="px-4">
                     <h6>{item.name}</h6>
-                    <h4 className="text-danger">${item.price.toFixed(2)}</h4>
+                    <h4 className="text-danger">£{item.price.toFixed(2)}</h4>
                     <p>
                       <small>Delivery free</small>
                     </p>

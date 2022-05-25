@@ -160,7 +160,7 @@ const Shipment = (props) => {
               <div className="px-4">
                 <h6>{item.name}</h6>
                 <h4 className="text-danger">
-                  ${parseFloat(item.price).toFixed(2)}
+                  £{parseFloat(item.price).toFixed(2)}
                 </h4>
                 <p>
                   <small>Delivery free</small>
@@ -205,22 +205,22 @@ const Shipment = (props) => {
           <div className="cart-calculation">
             <p className="d-flex justify-content-between">
               <span>Sub Total: {totalQuantity} Item</span>
-              <span>${subTotal.toFixed(2)}</span>
+              <span>£{subTotal.toFixed(2)}</span>
             </p>
 
             <p className="d-flex justify-content-between">
               <span>Tax</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>£{tax.toFixed(2)}</span>
             </p>
 
             <p className="d-flex justify-content-between">
               <span>Delivery Fee</span>
-              <span>${deliveryFee}</span>
+              <span>£{deliveryFee}</span>
             </p>
 
             <p className="h5 d-flex justify-content-between">
               <span>Total</span>
-              <span>${grandTotal.toFixed(2)}</span>
+              <span>£{grandTotal.toFixed(2)}</span>
             </p>
 
             {totalQuantity ? (

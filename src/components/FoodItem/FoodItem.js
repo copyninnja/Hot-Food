@@ -66,6 +66,7 @@ const FoodItem = (props) => {
           <p>{description}</p>
           <h4>£{parseFloat(price).toFixed(2)}</h4>
         </div>
+
         <Button
           type="primary"
           shape="round"
@@ -76,6 +77,7 @@ const FoodItem = (props) => {
         >
           update
         </Button>
+
         <Modal
           title="update this dish"
           centered

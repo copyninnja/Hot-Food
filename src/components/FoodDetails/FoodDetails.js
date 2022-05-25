@@ -80,7 +80,7 @@ const FoodDetails = (props) => {
           <h1>{currentFood.name}</h1>
           <p className="my-5">{currentFood.description}</p>
           <div className="d-flex my-4">
-            <h2 className="price">${currentFood.price}</h2>
+            <h2 className="price">£{currentFood.price}</h2>
 
             <div className="cart-controller ml-3 btn">
               <button
