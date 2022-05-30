@@ -27,8 +27,8 @@ const FoodItem = (props) => {
   const setModalVisible = () => {
     setModalState(!modalState);
   };
-  const deleteDish = () => {
-    deleteFoodItem(id);
+  const deleteDish = async () => {
+    await deleteFoodItem(id);
     window.location.reload();
   };
   const dishPhotoUpload = async (data) => {
